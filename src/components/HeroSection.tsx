@@ -1,5 +1,7 @@
-import { Search, Sparkles } from "lucide-react";
+import { Search, Sparkles, Stethoscope, Video, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import heroDoctor from "@/assets/hero-doctor.png";
 
 const HeroSection = () => {
@@ -7,7 +9,6 @@ const HeroSection = () => {
     <section className="relative overflow-hidden gradient-hero">
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="grid items-center gap-12 md:grid-cols-2">
-          {/* Left content */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -20,27 +21,33 @@ const HeroSection = () => {
             </div>
 
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground md:text-5xl lg:text-6xl text-balance">
-              Your health,{" "}
-              <span className="text-primary">one platform</span> away
+              Cureva –{" "}
+              <span className="text-primary">Bridging Tech</span> With Treatment
             </h1>
 
             <p className="max-w-lg text-lg text-muted-foreground">
-              Connect with verified doctors, book telemedicine consultations, order medicines, and get lab tests — all in one secure place.
+              AI powered doctor matching, telemedicine, pharmacy, and lab services in one platform.
             </p>
 
-            {/* Search bar */}
-            <div className="relative max-w-lg">
-              <div className="flex items-center rounded-xl border border-border bg-surface shadow-card transition-shadow focus-within:shadow-card-hover">
-                <Search className="ml-4 h-5 w-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search symptoms, doctors, or specialties..."
-                  className="flex-1 bg-transparent px-3 py-4 text-sm text-foreground placeholder:text-muted-foreground outline-none"
-                />
-                <button className="mr-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
-                  Search
-                </button>
-              </div>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild size="lg" className="gap-2">
+                <Link to="/doctors">
+                  <Stethoscope className="h-4 w-4" />
+                  Find a Doctor
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="gap-2">
+                <Link to="/consultation">
+                  <Video className="h-4 w-4" />
+                  Book Consultation
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="ghost" className="gap-2 border border-border">
+                <Link to="/join-doctor">
+                  <UserPlus className="h-4 w-4" />
+                  Join as Doctor
+                </Link>
+              </Button>
             </div>
 
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
@@ -55,7 +62,6 @@ const HeroSection = () => {
             </div>
           </motion.div>
 
-          {/* Right image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
