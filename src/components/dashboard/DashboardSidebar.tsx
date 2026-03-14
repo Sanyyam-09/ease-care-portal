@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Stethoscope, CalendarDays, FileText, FlaskConical,
-  Pill, MapPin, Landmark, Siren, UserCircle,
+  Pill, MapPin, Landmark, Siren, UserCircle, Brain, BookOpen,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Link } from "react-router-dom";
@@ -12,12 +12,14 @@ import {
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Find Doctor", url: "/doctors", icon: Stethoscope },
+  { title: "AI Symptom Checker", url: "/symptom-checker", icon: Brain },
   { title: "Appointments", url: "/dashboard/appointments", icon: CalendarDays },
   { title: "Medical Records", url: "/medical-records", icon: FileText },
   { title: "Lab Reports", url: "/lab-tests", icon: FlaskConical },
   { title: "Pharmacy Orders", url: "/pharmacy", icon: Pill },
   { title: "Health Camps", url: "/health-awareness", icon: MapPin },
   { title: "Government Schemes", url: "/dashboard/schemes", icon: Landmark },
+  { title: "Awareness Hub", url: "/health-awareness", icon: BookOpen },
   { title: "Emergency SOS", url: "/emergency", icon: Siren },
   { title: "Profile", url: "/dashboard/profile", icon: UserCircle },
 ];

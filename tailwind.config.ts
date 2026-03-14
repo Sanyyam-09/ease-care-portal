@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        heading: ['Poppins', 'system-ui', 'sans-serif'],
         body: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
@@ -56,11 +56,14 @@ export default {
         medical: {
           blue: "hsl(var(--medical-blue))",
           "blue-light": "hsl(var(--medical-blue-light))",
+          teal: "hsl(var(--medical-teal))",
+          "teal-light": "hsl(var(--medical-teal-light))",
           indigo: "hsl(var(--medical-indigo))",
           "indigo-light": "hsl(var(--medical-indigo-light))",
           green: "hsl(var(--medical-green))",
           "green-light": "hsl(var(--medical-green-light))",
         },
+        emergency: "hsl(var(--emergency))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -90,11 +93,16 @@ export default {
           from: { opacity: "0", transform: "translateY(8px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "pulse-emergency": {
+          "0%, 100%": { boxShadow: "0 0 0 0 hsl(0 100% 65% / 0.5)" },
+          "50%": { boxShadow: "0 0 0 12px hsl(0 100% 65% / 0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.5s ease-out forwards",
+        "pulse-emergency": "pulse-emergency 2s ease-in-out infinite",
       },
     },
   },

@@ -1,4 +1,4 @@
-import { BadgeCheck, Shield, Heart } from "lucide-react";
+import { BadgeCheck, Shield, Heart, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 
 const trustItems = [
@@ -9,7 +9,7 @@ const trustItems = [
     color: "bg-medical-green-light text-medical-green",
   },
   {
-    icon: Shield,
+    icon: Lock,
     title: "Blockchain Security",
     description: "Your medical data is encrypted and stored on tamper-proof blockchain.",
     color: "bg-medical-blue-light text-primary",
@@ -18,6 +18,12 @@ const trustItems = [
     icon: Heart,
     title: "Patient Trust Score",
     description: "Transparent ratings and reviews from real patients build community trust.",
+    color: "bg-medical-teal-light text-secondary",
+  },
+  {
+    icon: Shield,
+    title: "Secure Medical Records",
+    description: "Patient-owned records with end-to-end encryption and blockchain verification.",
     color: "bg-medical-indigo-light text-medical-indigo",
   },
 ];
@@ -33,7 +39,7 @@ const TrustSection = () => {
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {trustItems.map((item, i) => (
             <motion.div
               key={item.title}

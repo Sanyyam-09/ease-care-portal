@@ -7,6 +7,7 @@ import DoctorsSection from "@/components/DoctorsSection";
 import TrustSection from "@/components/TrustSection";
 import StatsSection from "@/components/StatsSection";
 import Footer from "@/components/Footer";
+import FloatingSOSButton from "@/components/FloatingSOSButton";
 
 const Index = () => {
   return (
@@ -20,6 +21,7 @@ const Index = () => {
       <TrustSection />
       <StatsSection />
       <Footer />
+      <FloatingSOSButton />
     </div>
   );
 };
