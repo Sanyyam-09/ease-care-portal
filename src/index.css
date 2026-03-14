@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,86 +6,89 @@
 
 @layer base {
   :root {
-    --background: 210 33% 98%;
-    --foreground: 222 47% 11%;
+    --background: 210 36% 98%;
+    --foreground: 220 26% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 220 26% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 220 26% 14%;
 
-    --primary: 217 91% 53%;
+    --primary: 214 100% 58%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 239 84% 67%;
+    --secondary: 174 73% 45%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 160 84% 39%;
+    --accent: 174 73% 45%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 100% 65%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 217 91% 53%;
+    --ring: 214 100% 58%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 217 91% 53%;
+    --sidebar-primary: 214 100% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-accent-foreground: 220 26% 14%;
     --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 217 91% 53%;
+    --sidebar-ring: 214 100% 58%;
 
     /* Custom tokens */
     --surface: 0 0% 100%;
-    --surface-elevated: 210 33% 98%;
-    --text-primary: 222 47% 11%;
+    --surface-elevated: 210 36% 98%;
+    --text-primary: 220 26% 14%;
     --text-secondary: 215 16% 47%;
-    --medical-blue: 217 91% 53%;
-    --medical-indigo: 239 84% 67%;
+    --medical-blue: 214 100% 58%;
+    --medical-teal: 174 73% 45%;
     --medical-green: 160 84% 39%;
     --medical-green-light: 160 84% 95%;
-    --medical-blue-light: 217 91% 95%;
+    --medical-blue-light: 214 100% 95%;
+    --medical-teal-light: 174 73% 93%;
+    --medical-indigo: 239 84% 67%;
     --medical-indigo-light: 239 84% 95%;
+    --emergency: 0 100% 65%;
   }
 
   .dark {
-    --background: 222 47% 6%;
+    --background: 220 26% 6%;
     --foreground: 210 40% 98%;
-    --card: 222 47% 9%;
+    --card: 220 26% 9%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 9%;
+    --popover: 220 26% 9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
+    --primary: 214 100% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 239 84% 67%;
+    --secondary: 174 73% 50%;
     --secondary-foreground: 0 0% 100%;
     --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
-    --accent: 160 84% 39%;
+    --accent: 174 73% 50%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 63% 31%;
+    --destructive: 0 100% 65%;
     --destructive-foreground: 210 40% 98%;
     --border: 217 33% 17%;
     --input: 217 33% 17%;
-    --ring: 217 91% 60%;
-    --sidebar-background: 222 47% 6%;
+    --ring: 214 100% 60%;
+    --sidebar-background: 220 26% 6%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary: 214 100% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 217 33% 17%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-ring: 214 100% 60%;
   }
 }
 
@@ -106,12 +109,12 @@
     text-wrap: balance;
   }
   .gradient-hero {
-    background: linear-gradient(135deg, hsl(217 91% 53% / 0.08) 0%, hsl(239 84% 67% / 0.05) 50%, hsl(160 84% 39% / 0.05) 100%);
+    background: linear-gradient(135deg, hsl(214 100% 58% / 0.06) 0%, hsl(174 73% 45% / 0.04) 50%, hsl(160 84% 39% / 0.04) 100%);
   }
   .shadow-card {
-    box-shadow: 0 1px 3px 0 hsl(217 91% 53% / 0.06), 0 1px 2px -1px hsl(217 91% 53% / 0.06);
+    box-shadow: 0 1px 3px 0 hsl(214 100% 58% / 0.06), 0 1px 2px -1px hsl(214 100% 58% / 0.06);
   }
   .shadow-card-hover {
-    box-shadow: 0 10px 25px -5px hsl(217 91% 53% / 0.1), 0 4px 10px -4px hsl(217 91% 53% / 0.06);
+    box-shadow: 0 10px 25px -5px hsl(214 100% 58% / 0.1), 0 4px 10px -4px hsl(214 100% 58% / 0.06);
   }
 }

@@ -1,8 +1,15 @@
-import { Search, Sparkles, Stethoscope, Video, UserPlus } from "lucide-react";
+import { Sparkles, Stethoscope, Video, UserPlus, Shield, BadgeCheck, Lock, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import heroDoctor from "@/assets/hero-doctor.png";
+
+const trustBadges = [
+  { icon: BadgeCheck, label: "Verified Doctors" },
+  { icon: Lock, label: "Blockchain Security" },
+  { icon: Heart, label: "Trusted by Patients" },
+  { icon: Shield, label: "Secure Records" },
+];
 
 const HeroSection = () => {
   return (
@@ -15,18 +22,18 @@ const HeroSection = () => {
             transition={{ duration: 0.5 }}
             className="flex flex-col gap-6"
           >
-            <div className="inline-flex w-fit items-center gap-2 rounded-full bg-medical-indigo-light px-4 py-1.5">
-              <Sparkles className="h-4 w-4 text-medical-indigo" />
-              <span className="text-sm font-medium text-medical-indigo">AI-Powered Healthcare</span>
+            <div className="inline-flex w-fit items-center gap-2 rounded-full bg-medical-teal-light px-4 py-1.5">
+              <Sparkles className="h-4 w-4 text-secondary" />
+              <span className="text-sm font-medium text-secondary">AI-Powered Healthcare</span>
             </div>
 
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground md:text-5xl lg:text-6xl text-balance">
-              Cureva –{" "}
-              <span className="text-primary">Bridging Tech</span> With Treatment
+              Healthcare Made{" "}
+              <span className="text-primary">Intelligent</span>, Secure, and Accessible
             </h1>
 
-            <p className="max-w-lg text-lg text-muted-foreground">
-              AI powered doctor matching, telemedicine, pharmacy, and lab services in one platform.
+            <p className="max-w-lg text-lg text-muted-foreground leading-relaxed">
+              Cureva connects patients with trusted doctors using AI-powered matchmaking, secure medical records, and integrated pharmacy and lab services.
             </p>
 
             <div className="flex flex-wrap gap-3">
@@ -36,10 +43,10 @@ const HeroSection = () => {
                   Find a Doctor
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="gap-2">
-                <Link to="/consultation">
-                  <Video className="h-4 w-4" />
-                  Book Consultation
+              <Button asChild size="lg" variant="outline" className="gap-2 border-secondary text-secondary hover:bg-secondary/10">
+                <Link to="/symptom-checker">
+                  <Sparkles className="h-4 w-4" />
+                  Start Symptom Check
                 </Link>
               </Button>
               <Button asChild size="lg" variant="ghost" className="gap-2 border border-border">
@@ -50,15 +57,14 @@ const HeroSection = () => {
               </Button>
             </div>
 
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-medical-green" />
-                2,500+ Verified Doctors
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-primary" />
-                24/7 Telemedicine
-              </span>
+            {/* Trust Badges */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              {trustBadges.map((badge) => (
+                <span key={badge.label} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <badge.icon className="h-4 w-4 text-secondary" />
+                  {badge.label}
+                </span>
+              ))}
             </div>
           </motion.div>
 
@@ -70,7 +76,7 @@ const HeroSection = () => {
           >
             <img
               src={heroDoctor}
-              alt="Doctor consulting patient digitally"
+              alt="AI healthcare dashboard illustration showing doctor consulting patient digitally"
               className="w-full max-w-md"
             />
           </motion.div>
