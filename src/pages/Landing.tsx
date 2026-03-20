@@ -2,18 +2,18 @@ import { Siren, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSelector from "@/components/LanguageSelector";
 import MedicalScene from "@/components/MedicalScene";
 
 const Landing = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
-      {/* 3D Background */}
       <MedicalScene />
 
-      {/* Gradient overlay for readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background/70 pointer-events-none" />
 
-      {/* Logo in top-left corner */}
+      {/* Top bar */}
       <div className="absolute top-6 left-6 z-20">
         <Link to="/" className="flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-md">
@@ -22,18 +22,15 @@ const Landing = () => {
         </Link>
       </div>
 
-      {/* Admin login on the right side */}
-      <div className="absolute top-6 right-6 z-20">
+      <div className="absolute top-6 right-6 z-20 flex items-center gap-2">
+        <LanguageSelector />
+        <ThemeToggle />
         <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
           <Link to="/admin-login">
             <ShieldCheck className="h-4 w-4" />
             Admin
           </Link>
         </Button>
-      </div>
-
-      {/* SOS Button - top right below admin */}
-      <div className="absolute top-16 right-6 z-20 mt-2">
         <Button size="sm" variant="destructive" className="gap-1.5 animate-pulse-emergency shadow-lg" asChild>
           <Link to="/emergency">
             <Siren className="h-4 w-4" />
@@ -73,7 +70,6 @@ const Landing = () => {
           </motion.p>
         </motion.div>
 
-        {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -88,7 +84,6 @@ const Landing = () => {
           </Button>
         </motion.div>
 
-        {/* Explore link */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -100,15 +95,6 @@ const Landing = () => {
           </Button>
         </motion.div>
       </div>
-
-      {/* Floating SOS at bottom */}
-      <Link
-        to="/emergency"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-lg transition-transform hover:scale-110 active:scale-95 animate-pulse-emergency"
-        aria-label="Emergency SOS"
-      >
-        <Siren className="h-6 w-6" />
-      </Link>
     </div>
   );
 };
