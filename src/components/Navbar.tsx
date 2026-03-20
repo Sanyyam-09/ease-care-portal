@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Siren } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const navLinks = [
   { label: "Find Doctors", href: "/doctors" },
@@ -36,12 +38,14 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
+          <LanguageSelector />
+          <ThemeToggle />
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/dashboard">Login</Link>
+            <Link to="/login">Login</Link>
           </Button>
           <Button size="sm" asChild>
-            <Link to="/dashboard">Sign Up</Link>
+            <Link to="/register">Sign Up</Link>
           </Button>
           <Button size="sm" variant="destructive" className="gap-1.5 animate-pulse-emergency" asChild>
             <Link to="/emergency">
@@ -51,7 +55,9 @@ const Navbar = () => {
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-1 lg:hidden">
+          <LanguageSelector />
+          <ThemeToggle />
           <Button size="sm" variant="destructive" className="gap-1 animate-pulse-emergency" asChild>
             <Link to="/emergency">
               <Siren className="h-4 w-4" />
@@ -69,7 +75,7 @@ const Navbar = () => {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-border bg-surface px-4 pb-4 lg:hidden">
+        <div className="border-t border-border bg-card px-4 pb-4 lg:hidden">
           <div className="flex flex-col gap-3 pt-3">
             {navLinks.map((link) => (
               <Link
@@ -83,10 +89,10 @@ const Navbar = () => {
             ))}
             <div className="flex gap-3 pt-2">
               <Button variant="ghost" size="sm" className="flex-1" asChild>
-                <Link to="/dashboard" onClick={() => setMobileOpen(false)}>Login</Link>
+                <Link to="/login" onClick={() => setMobileOpen(false)}>Login</Link>
               </Button>
               <Button size="sm" className="flex-1" asChild>
-                <Link to="/dashboard" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+                <Link to="/register" onClick={() => setMobileOpen(false)}>Sign Up</Link>
               </Button>
             </div>
           </div>
