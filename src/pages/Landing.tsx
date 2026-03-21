@@ -13,30 +13,32 @@ const Landing = () => {
 
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background/70 pointer-events-none" />
 
-      {/* Top bar */}
-      <div className="absolute top-6 left-6 z-20">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-md">
-            <span className="text-xl font-bold text-primary-foreground">C</span>
-          </div>
-        </Link>
-      </div>
+      {/* Top bar - with background for dark mode visibility */}
+      <div className="absolute top-0 left-0 right-0 z-20">
+        <div className="flex items-center justify-between px-6 py-4 bg-background/80 backdrop-blur-md border-b border-border/50">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-md">
+              <span className="text-xl font-bold text-primary-foreground">C</span>
+            </div>
+          </Link>
 
-      <div className="absolute top-6 right-6 z-20 flex items-center gap-2">
-        <LanguageSelector />
-        <ThemeToggle />
-        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
-          <Link to="/admin-login">
-            <ShieldCheck className="h-4 w-4" />
-            Admin
-          </Link>
-        </Button>
-        <Button size="sm" variant="destructive" className="gap-1.5 animate-pulse-emergency shadow-lg" asChild>
-          <Link to="/emergency">
-            <Siren className="h-4 w-4" />
-            SOS
-          </Link>
-        </Button>
+          <div className="flex items-center gap-2">
+            <LanguageSelector />
+            <ThemeToggle />
+            <Button variant="outline" size="sm" className="gap-1.5" asChild>
+              <Link to="/admin-login">
+                <ShieldCheck className="h-4 w-4" />
+                Admin
+              </Link>
+            </Button>
+            <Button size="sm" variant="destructive" className="gap-1.5 animate-pulse-emergency shadow-lg" asChild>
+              <Link to="/emergency">
+                <Siren className="h-4 w-4" />
+                SOS
+              </Link>
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* Center Content */}
