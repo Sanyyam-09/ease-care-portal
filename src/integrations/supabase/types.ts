@@ -14,16 +14,444 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      doctor_reviews: {
+        Row: {
+          created_at: string
+          doctor_id: string
+          id: string
+          rating: number
+          review_text: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          doctor_id: string
+          id?: string
+          rating: number
+          review_text?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          doctor_id?: string
+          id?: string
+          rating?: number
+          review_text?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctor_reviews_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "doctors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctors: {
+        Row: {
+          available: boolean | null
+          avatar_initials: string | null
+          bio: string | null
+          certificate_url: string | null
+          certificate_verified: boolean | null
+          city: string | null
+          consultation_fee: number | null
+          created_at: string
+          experience_years: number | null
+          hospital: string | null
+          id: string
+          languages: string[] | null
+          location: string | null
+          name: string
+          qualification: string | null
+          rating: number | null
+          specialty: string
+          state: string | null
+          total_reviews: number | null
+          trust_score: number | null
+        }
+        Insert: {
+          available?: boolean | null
+          avatar_initials?: string | null
+          bio?: string | null
+          certificate_url?: string | null
+          certificate_verified?: boolean | null
+          city?: string | null
+          consultation_fee?: number | null
+          created_at?: string
+          experience_years?: number | null
+          hospital?: string | null
+          id?: string
+          languages?: string[] | null
+          location?: string | null
+          name: string
+          qualification?: string | null
+          rating?: number | null
+          specialty: string
+          state?: string | null
+          total_reviews?: number | null
+          trust_score?: number | null
+        }
+        Update: {
+          available?: boolean | null
+          avatar_initials?: string | null
+          bio?: string | null
+          certificate_url?: string | null
+          certificate_verified?: boolean | null
+          city?: string | null
+          consultation_fee?: number | null
+          created_at?: string
+          experience_years?: number | null
+          hospital?: string | null
+          id?: string
+          languages?: string[] | null
+          location?: string | null
+          name?: string
+          qualification?: string | null
+          rating?: number | null
+          specialty?: string
+          state?: string | null
+          total_reviews?: number | null
+          trust_score?: number | null
+        }
+        Relationships: []
+      }
+      government_schemes: {
+        Row: {
+          applicable_states: string[] | null
+          benefits: string | null
+          coverage_amount: number | null
+          description: string | null
+          eligibility_criteria: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          website_url: string | null
+        }
+        Insert: {
+          applicable_states?: string[] | null
+          benefits?: string | null
+          coverage_amount?: number | null
+          description?: string | null
+          eligibility_criteria?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          website_url?: string | null
+        }
+        Update: {
+          applicable_states?: string[] | null
+          benefits?: string | null
+          coverage_amount?: number | null
+          description?: string | null
+          eligibility_criteria?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      hospital_rooms: {
+        Row: {
+          amenities: string[] | null
+          description: string | null
+          hospital_id: string
+          id: string
+          image_url: string | null
+          price_per_day: number | null
+          room_type: string
+        }
+        Insert: {
+          amenities?: string[] | null
+          description?: string | null
+          hospital_id: string
+          id?: string
+          image_url?: string | null
+          price_per_day?: number | null
+          room_type: string
+        }
+        Update: {
+          amenities?: string[] | null
+          description?: string | null
+          hospital_id?: string
+          id?: string
+          image_url?: string | null
+          price_per_day?: number | null
+          room_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hospital_rooms_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hospitals: {
+        Row: {
+          accreditation: string | null
+          certificate_verified: boolean | null
+          city: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          location: string | null
+          name: string
+          offers: string[] | null
+          rating: number | null
+          state: string | null
+          total_reviews: number | null
+          trust_score: number | null
+        }
+        Insert: {
+          accreditation?: string | null
+          certificate_verified?: boolean | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          name: string
+          offers?: string[] | null
+          rating?: number | null
+          state?: string | null
+          total_reviews?: number | null
+          trust_score?: number | null
+        }
+        Update: {
+          accreditation?: string | null
+          certificate_verified?: boolean | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          name?: string
+          offers?: string[] | null
+          rating?: number | null
+          state?: string | null
+          total_reviews?: number | null
+          trust_score?: number | null
+        }
+        Relationships: []
+      }
+      ngo_services: {
+        Row: {
+          city: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          event_date: string | null
+          event_time: string | null
+          id: string
+          is_active: boolean | null
+          location: string | null
+          ngo_name: string
+          service_type: string
+          state: string | null
+        }
+        Insert: {
+          city?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          event_time?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          ngo_name: string
+          service_type: string
+          state?: string | null
+        }
+        Update: {
+          city?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          event_time?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          ngo_name?: string
+          service_type?: string
+          state?: string | null
+        }
+        Relationships: []
+      }
+      procedure_pricing: {
+        Row: {
+          anesthesia_fee: number | null
+          base_price: number
+          category: string | null
+          hospital_id: string
+          id: string
+          medicine_cost: number | null
+          misc_charges: number | null
+          notes: string | null
+          nursing_charges: number | null
+          procedure_name: string
+          room_charges: number | null
+          surgeon_fee: number | null
+          total_estimate: number
+        }
+        Insert: {
+          anesthesia_fee?: number | null
+          base_price: number
+          category?: string | null
+          hospital_id: string
+          id?: string
+          medicine_cost?: number | null
+          misc_charges?: number | null
+          notes?: string | null
+          nursing_charges?: number | null
+          procedure_name: string
+          room_charges?: number | null
+          surgeon_fee?: number | null
+          total_estimate: number
+        }
+        Update: {
+          anesthesia_fee?: number | null
+          base_price?: number
+          category?: string | null
+          hospital_id?: string
+          id?: string
+          medicine_cost?: number | null
+          misc_charges?: number | null
+          notes?: string | null
+          nursing_charges?: number | null
+          procedure_name?: string
+          room_charges?: number | null
+          surgeon_fee?: number | null
+          total_estimate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "procedure_pricing_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          avatar_url: string | null
+          city: string | null
+          created_at: string
+          date_of_birth: string | null
+          full_name: string | null
+          gender: string | null
+          id: string
+          phone: string | null
+          pin_code: string | null
+          state: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          full_name?: string | null
+          gender?: string | null
+          id?: string
+          phone?: string | null
+          pin_code?: string | null
+          state?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          full_name?: string | null
+          gender?: string | null
+          id?: string
+          phone?: string | null
+          pin_code?: string | null
+          state?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "doctor" | "patient"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +578,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "doctor", "patient"],
+    },
   },
 } as const
