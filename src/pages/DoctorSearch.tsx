@@ -114,7 +114,7 @@ const DoctorSearch = () => {
               </div>
 
               <div className="mt-4 flex gap-2">
-                <Button size="sm" className="flex-1">Book Appointment</Button>
+                <Button size="sm" className="flex-1" onClick={() => navigate("/book-appointment")}>Book Appointment</Button>
                 <Button size="sm" variant="outline" className="gap-1"><Video className="h-3.5 w-3.5" />Video</Button>
                 <Dialog>
                   <DialogTrigger asChild>
