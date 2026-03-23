@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const DoctorSearch = () => {
+  const navigate = useNavigate();
   const [doctors, setDoctors] = useState<any[]>([]);
   const [reviews, setReviews] = useState<Record<string, any[]>>({});
   const [searchQuery, setSearchQuery] = useState("");
