@@ -1,56 +1,127 @@
-import { Upload, FileText, Image, Shield, CheckCircle } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Upload, FileText, Image, Shield, Trash2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "@/hooks/useTranslation";
 
-const records = [
-  { name: "Blood Test Report", type: "Lab Report", date: "Mar 10, 2026", verified: true },
-  { name: "ECG Report", type: "Diagnostic", date: "Mar 5, 2026", verified: true },
-  { name: "Dr. Chen Prescription", type: "Prescription", date: "Feb 28, 2026", verified: false },
-  { name: "Chest X-Ray", type: "X-Ray", date: "Feb 15, 2026", verified: true },
-  { name: "Thyroid Panel Results", type: "Lab Report", date: "Jan 20, 2026", verified: true },
-];
+const recordTypes = ["Lab Report", "Prescription", "X-Ray", "Diagnostic", "Discharge Summary", "Other"];
 
 const MedicalRecords = () => {
+  const [records, setRecords] = useState<any[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [recordType, setRecordType] = useState("Lab Report");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const t = useTranslation();
+
+  useEffect(() => { if (user) fetchRecords(); }, [user]);
+
+  const fetchRecords = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("medical_records")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("uploaded_at", { ascending: false });
+    if (data) setRecords(data);
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || !user) return;
+    setUploading(true);
+
+    for (const file of Array.from(files)) {
+      const filePath = `${user.id}/${Date.now()}_${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("medical-records")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        toast({ title: "Upload failed", description: uploadError.message, variant: "destructive" });
+        continue;
+      }
+
+      const { data: { publicUrl } } = supabase.storage.from("medical-records").getPublicUrl(filePath);
+
+      await supabase.from("medical_records").insert({
+        user_id: user.id,
+        file_name: file.name,
+        file_url: filePath,
+        file_type: file.type,
+        record_type: recordType,
+      });
+    }
+
+    setUploading(false);
+    fetchRecords();
+    toast({ title: t("common.success"), description: "Files uploaded successfully" });
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleDelete = async (record: any) => {
+    await supabase.storage.from("medical-records").remove([record.file_url]);
+    await supabase.from("medical_records").delete().eq("id", record.id);
+    fetchRecords();
+    toast({ title: "Record deleted" });
+  };
+
+  const handleView = async (record: any) => {
+    const { data } = await supabase.storage.from("medical-records").createSignedUrl(record.file_url, 3600);
+    if (data?.signedUrl) window.open(data.signedUrl, "_blank");
+  };
+
   return (
     <DashboardLayout>
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Medical Records</h1>
-          <p className="text-muted-foreground mt-1">Upload and manage your health documents securely</p>
+          <h1 className="text-2xl font-bold text-foreground">{t("records.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("records.subtitle")}</p>
         </div>
 
-        {/* Upload Section */}
         <div className="rounded-xl border-2 border-dashed border-border bg-card p-8 text-center">
           <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
-          <h3 className="font-semibold text-foreground mb-1">Upload Medical Documents</h3>
+          <h3 className="font-semibold text-foreground mb-1">{t("records.upload")}</h3>
           <p className="text-sm text-muted-foreground mb-4">Prescriptions, lab reports, X-rays (PDF, JPG, PNG)</p>
-          <Button className="gap-2">
-            <Upload className="h-4 w-4" />
-            Choose Files
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Select value={recordType} onValueChange={setRecordType}>
+              <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {recordTypes.map((rt) => <SelectItem key={rt} value={rt}>{rt}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Button className="gap-2" disabled={uploading} onClick={() => fileInputRef.current?.click()}>
+              <Upload className="h-4 w-4" />
+              {uploading ? t("common.loading") : t("records.chooseFiles")}
+            </Button>
+            <input ref={fileInputRef} type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.webp" className="hidden" onChange={handleUpload} />
+          </div>
         </div>
 
-        {/* Records List */}
         <div className="space-y-3">
-          {records.map((record, i) => (
-            <div key={i} className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 shadow-card">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-medical-blue-light text-primary">
-                {record.type === "X-Ray" ? <Image className="h-5 w-5" /> : <FileText className="h-5 w-5" />}
+          {records.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8">No records uploaded yet. Upload your first document above.</p>
+          ) : records.map((record) => (
+            <div key={record.id} className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 shadow-card">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                {record.file_type?.includes("image") ? <Image className="h-5 w-5" /> : <FileText className="h-5 w-5" />}
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-foreground truncate">{record.name}</h4>
-                <p className="text-xs text-muted-foreground">{record.type} · {record.date}</p>
+                <h4 className="font-medium text-foreground truncate">{record.file_name}</h4>
+                <p className="text-xs text-muted-foreground">{record.record_type} · {new Date(record.uploaded_at).toLocaleDateString()}</p>
               </div>
               <div className="flex items-center gap-2">
-                {record.verified ? (
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-medical-green">
-                    <Shield className="h-3.5 w-3.5" />
-                    Blockchain Verified
-                  </span>
-                ) : (
-                  <span className="text-xs text-muted-foreground">Pending verification</span>
-                )}
-                <Button variant="outline" size="sm">View</Button>
+                <Button variant="outline" size="sm" className="gap-1" onClick={() => handleView(record)}>
+                  <ExternalLink className="h-3.5 w-3.5" />{t("records.view")}
+                </Button>
+                <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleDelete(record)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           ))}

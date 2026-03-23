@@ -2,16 +2,19 @@ import { Sparkles, Stethoscope, Video, UserPlus, Shield, BadgeCheck, Lock, Heart
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
 import heroDoctor from "@/assets/hero-doctor.png";
 
-const trustBadges = [
-  { icon: BadgeCheck, label: "Verified Doctors" },
-  { icon: Lock, label: "Blockchain Security" },
-  { icon: Heart, label: "Trusted by Patients" },
-  { icon: Shield, label: "Secure Records" },
-];
-
 const HeroSection = () => {
+  const t = useTranslation();
+
+  const trustBadges = [
+    { icon: BadgeCheck, label: t("hero.verifiedDoctors") },
+    { icon: Lock, label: t("hero.blockchainSecurity") },
+    { icon: Heart, label: t("hero.trustedPatients") },
+    { icon: Shield, label: t("hero.secureRecords") },
+  ];
+
   return (
     <section className="relative overflow-hidden gradient-hero">
       <div className="container mx-auto px-4 py-16 md:py-24">
@@ -24,40 +27,40 @@ const HeroSection = () => {
           >
             <div className="inline-flex w-fit items-center gap-2 rounded-full bg-medical-teal-light px-4 py-1.5">
               <Sparkles className="h-4 w-4 text-secondary" />
-              <span className="text-sm font-medium text-secondary">AI-Powered Healthcare</span>
+              <span className="text-sm font-medium text-secondary">{t("hero.badge")}</span>
             </div>
 
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground md:text-5xl lg:text-6xl text-balance">
-              Healthcare Made{" "}
-              <span className="text-primary">Intelligent</span>, Secure, and Accessible
+              {t("hero.title1")}
+              <span className="text-primary">{t("hero.title2")}</span>
+              {t("hero.title3")}
             </h1>
 
             <p className="max-w-lg text-lg text-muted-foreground leading-relaxed">
-              Cureva connects patients with trusted doctors using AI-powered matchmaking, secure medical records, and integrated pharmacy and lab services.
+              {t("hero.subtitle")}
             </p>
 
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" className="gap-2">
                 <Link to="/doctors">
                   <Stethoscope className="h-4 w-4" />
-                  Find a Doctor
+                  {t("hero.findDoctor")}
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="gap-2 border-secondary text-secondary hover:bg-secondary/10">
                 <Link to="/symptom-checker">
                   <Sparkles className="h-4 w-4" />
-                  Start Symptom Check
+                  {t("hero.symptomCheck")}
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="ghost" className="gap-2 border border-border">
-                <Link to="/join-doctor">
-                  <UserPlus className="h-4 w-4" />
-                  Join as Doctor
+              <Button asChild size="lg" variant="outline" className="gap-2">
+                <Link to="/consultation">
+                  <Video className="h-4 w-4" />
+                  {t("hero.videoConsult")}
                 </Link>
               </Button>
             </div>
 
-            {/* Trust Badges */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
               {trustBadges.map((badge) => (
                 <span key={badge.label} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
