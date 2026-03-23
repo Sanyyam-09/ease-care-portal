@@ -27,6 +27,7 @@ import Pharmacy from "./pages/Pharmacy";
 import LabTests from "./pages/LabTests";
 import EmergencySOS from "./pages/EmergencySOS";
 import HealthAwareness from "./pages/HealthAwareness";
+import BookAppointment from "./pages/BookAppointment";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
