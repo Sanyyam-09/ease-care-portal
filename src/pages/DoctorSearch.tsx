@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { getDoctorAvatar } from "@/lib/doctorAvatars";
 
 const DoctorSearch = () => {
   const navigate = useNavigate();
@@ -80,12 +81,17 @@ const DoctorSearch = () => {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((doc) => (
+          {filtered.map((doc, index) => (
             <div key={doc.id} className="rounded-xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-card-hover">
               <div className="flex items-start gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-lg">
-                  {doc.avatar_initials}
-                </div>
+                <img
+                  src={getDoctorAvatar(doc.name, index)}
+                  alt={doc.name}
+                  className="h-14 w-14 shrink-0 rounded-full object-cover"
+                  loading="lazy"
+                  width={56}
+                  height={56}
+                />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <h3 className="font-semibold text-card-foreground truncate">{doc.name}</h3>

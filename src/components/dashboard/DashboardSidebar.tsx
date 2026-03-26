@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Stethoscope, CalendarDays, FileText, FlaskConical,
-  Pill, MapPin, Landmark, Siren, UserCircle, Brain, BookOpen,
+  Pill, MapPin, Landmark, Siren, UserCircle, Brain, BookOpen, UserPlus,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Link } from "react-router-dom";
@@ -8,25 +8,34 @@ import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/contexts/AuthContext";
 
-const items = [
+const patientItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Find Doctor", url: "/doctors", icon: Stethoscope },
   { title: "AI Symptom Checker", url: "/symptom-checker", icon: Brain },
-  { title: "Appointments", url: "/dashboard/appointments", icon: CalendarDays },
+  { title: "Appointments", url: "/book-appointment", icon: CalendarDays },
   { title: "Medical Records", url: "/medical-records", icon: FileText },
   { title: "Lab Reports", url: "/lab-tests", icon: FlaskConical },
   { title: "Pharmacy Orders", url: "/pharmacy", icon: Pill },
   { title: "Health Camps", url: "/health-awareness", icon: MapPin },
-  { title: "Government Schemes", url: "/dashboard/schemes", icon: Landmark },
+  { title: "Government Schemes", url: "/government-schemes", icon: Landmark },
   { title: "Awareness Hub", url: "/health-awareness", icon: BookOpen },
   { title: "Emergency SOS", url: "/emergency", icon: Siren },
+  { title: "Profile", url: "/dashboard/profile", icon: UserCircle },
+];
+
+const doctorItems = [
+  { title: "Dashboard", url: "/doctor-dashboard", icon: LayoutDashboard },
+  { title: "My Appointments", url: "/doctor-dashboard", icon: CalendarDays },
   { title: "Profile", url: "/dashboard/profile", icon: UserCircle },
 ];
 
 const DashboardSidebar = () => {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  // For now, show patient items; doctor items can be shown based on role
+  const items = patientItems;
 
   return (
     <Sidebar collapsible="icon">

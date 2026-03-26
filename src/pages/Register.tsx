@@ -133,9 +133,15 @@ const Register = () => {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link to="/login" className="text-primary font-medium hover:underline">Sign in</Link>
+            <div className="mt-6 text-center space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Already have an account?{" "}
+                <Link to="/login" className="text-primary font-medium hover:underline">Sign in</Link>
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Are you a doctor?{" "}
+                <Link to="/doctor-register" className="text-primary font-medium hover:underline">Register as Doctor</Link>
+              </p>
             </div>
           </CardContent>
         </Card>

@@ -28,6 +28,8 @@ import LabTests from "./pages/LabTests";
 import EmergencySOS from "./pages/EmergencySOS";
 import HealthAwareness from "./pages/HealthAwareness";
 import BookAppointment from "./pages/BookAppointment";
+import DoctorRegister from "./pages/DoctorRegister";
+import DoctorDashboard from "./pages/DoctorDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -63,6 +65,8 @@ const App = () => (
                 <Route path="/emergency" element={<EmergencySOS />} />
                 <Route path="/health-awareness" element={<HealthAwareness />} />
                 <Route path="/book-appointment" element={<BookAppointment />} />
+                <Route path="/doctor-register" element={<DoctorRegister />} />
+                <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <FloatingSOSButton />
