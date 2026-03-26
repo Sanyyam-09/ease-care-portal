@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { format, addDays } from "date-fns";
-import { CalendarIcon, Clock, CheckCircle2 } from "lucide-react";
+import { CalendarIcon, Clock, CheckCircle2, RefreshCw, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -62,6 +62,23 @@ const BookAppointment = () => {
     setConfirmed(true);
     fetchAppointments();
     setTimeout(() => { setConfirmed(false); setSelectedDoctor(""); setDate(undefined); setTimeSlot(""); }, 3000);
+  };
+
+  const handleCancel = async (id: string) => {
+    const { error } = await supabase.from("appointments").update({ status: "cancelled" }).eq("id", id);
+    if (error) { toast({ title: "Failed to cancel", variant: "destructive" }); return; }
+    toast({ title: "Appointment cancelled" });
+    fetchAppointments();
+  };
+
+  const handleReschedule = (apt: any) => {
+    setSelectedDoctor(apt.doctor_id);
+    setDate(undefined);
+    setTimeSlot("");
+    // Update old appointment status
+    supabase.from("appointments").update({ status: "rescheduled" }).eq("id", apt.id).then(() => fetchAppointments());
+    toast({ title: "Select a new date and time to reschedule" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -133,18 +150,35 @@ const BookAppointment = () => {
             <h2 className="text-xl font-bold text-foreground mb-4">{t("booking.yourAppointments")}</h2>
             <div className="space-y-3">
               {appointments.map((apt) => (
-                <div key={apt.id} className="flex items-center justify-between rounded-xl border border-border bg-card p-4">
-                  <div>
-                    <p className="font-medium text-foreground">{(apt.doctors as any)?.name}</p>
-                    <p className="text-sm text-muted-foreground">{(apt.doctors as any)?.specialty}</p>
+                <div key={apt.id} className="rounded-xl border border-border bg-card p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-foreground">{(apt.doctors as any)?.name}</p>
+                      <p className="text-sm text-muted-foreground">{(apt.doctors as any)?.specialty}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-foreground">{apt.appointment_date}</p>
+                      <p className="text-xs text-muted-foreground">{apt.time_slot}</p>
+                      <span className={`text-xs font-medium ${
+                        apt.status === "confirmed" ? "text-medical-green" :
+                        apt.status === "cancelled" ? "text-destructive" :
+                        apt.status === "rescheduled" ? "text-amber-600" :
+                        "text-muted-foreground"
+                      }`}>
+                        {apt.status}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-foreground">{apt.appointment_date}</p>
-                    <p className="text-xs text-muted-foreground">{apt.time_slot}</p>
-                    <span className={`text-xs font-medium ${apt.status === "confirmed" ? "text-medical-green" : "text-muted-foreground"}`}>
-                      {apt.status}
-                    </span>
-                  </div>
+                  {apt.status === "confirmed" && (
+                    <div className="flex gap-2 mt-3 pt-3 border-t border-border">
+                      <Button size="sm" variant="outline" className="flex-1 gap-1" onClick={() => handleReschedule(apt)}>
+                        <RefreshCw className="h-3 w-3" /> Reschedule
+                      </Button>
+                      <Button size="sm" variant="outline" className="flex-1 gap-1 text-destructive hover:text-destructive" onClick={() => handleCancel(apt.id)}>
+                        <XCircle className="h-3 w-3" /> Cancel
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
