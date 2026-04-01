@@ -84,7 +84,8 @@ const DoctorSearch = () => {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((doc, index) => (
-            <div key={doc.id} className="rounded-xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-card-hover">
+            <motion.div key={doc.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
+              className="rounded-xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-card-hover">
               <div className="flex items-start gap-4">
                 <img
                   src={getDoctorAvatar(doc.name, index)}
