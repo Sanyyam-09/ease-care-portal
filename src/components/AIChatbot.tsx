@@ -140,7 +140,7 @@ const AIChatbot = () => {
   }
 
   return (
-    <div className="fixed bottom-24 right-6 z-50 w-[360px] max-h-[500px] rounded-xl border border-border bg-card shadow-2xl flex flex-col overflow-hidden">
+    <div className="fixed bottom-6 left-6 z-50 w-[360px] max-h-[500px] rounded-xl border border-border bg-card shadow-2xl flex flex-col overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between bg-primary px-4 py-3">
         <div className="flex items-center gap-2">
