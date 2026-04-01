@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Users, Stethoscope, CalendarDays, FlaskConical, Pill, ShieldCheck,
-  Activity, TrendingUp, AlertTriangle, LogOut, LayoutDashboard, Settings,
+  Activity, TrendingUp, LogOut, LayoutDashboard, Settings,
   FileText, Siren, Building2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const stats = [
   { label: "Total Patients", value: "12,458", icon: Users, trend: "+8.2%" },
@@ -39,9 +41,20 @@ const recentActivity = [
 ];
 
 const AdminDashboard = () => {
+  const { user, isAdmin, signOut, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) navigate("/admin-login");
+  }, [user, loading]);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen flex bg-background">
-      {/* Sidebar */}
       <aside className="hidden lg:flex w-64 flex-col border-r border-border bg-card">
         <div className="flex h-16 items-center gap-2 border-b border-border px-5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -54,9 +67,7 @@ const AdminDashboard = () => {
             <button
               key={item.label}
               className={`w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                item.active
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                item.active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               <item.icon className="h-4 w-4 shrink-0" />
@@ -65,16 +76,13 @@ const AdminDashboard = () => {
           ))}
         </nav>
         <div className="p-3 border-t border-border">
-          <Button variant="ghost" className="w-full justify-start gap-2 text-muted-foreground" asChild>
-            <Link to="/">
-              <LogOut className="h-4 w-4" />
-              Sign Out
-            </Link>
+          <Button variant="ghost" className="w-full justify-start gap-2 text-muted-foreground" onClick={handleSignOut}>
+            <LogOut className="h-4 w-4" />
+            Sign Out
           </Button>
         </div>
       </aside>
 
-      {/* Main */}
       <div className="flex-1 flex flex-col">
         <header className="h-16 flex items-center justify-between border-b border-border bg-card px-6">
           <div className="flex items-center gap-2">
@@ -82,7 +90,7 @@ const AdminDashboard = () => {
             <h1 className="text-lg font-heading font-semibold text-foreground">Dashboard Overview</h1>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">admin@cureva.com</span>
+            <span className="text-sm text-muted-foreground">{user?.email || "admin@cureva.com"}</span>
             <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
               <ShieldCheck className="h-4 w-4 text-primary" />
             </div>
@@ -90,16 +98,10 @@ const AdminDashboard = () => {
         </header>
 
         <main className="flex-1 p-6 overflow-auto">
-          {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <Card className="border-border/50">
+              <motion.div key={stat.label} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                <Card className="border-border/50 hover:shadow-card-hover transition-shadow">
                   <CardContent className="p-5">
                     <div className="flex items-center justify-between">
                       <div>
@@ -121,7 +123,6 @@ const AdminDashboard = () => {
             ))}
           </div>
 
-          {/* Recent Activity */}
           <Card className="border-border/50">
             <CardHeader>
               <CardTitle className="text-lg font-heading">Recent Activity</CardTitle>
@@ -129,17 +130,18 @@ const AdminDashboard = () => {
             <CardContent>
               <div className="space-y-4">
                 {recentActivity.map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
+                  <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.05 }}
+                    className="flex items-start gap-3">
                     <div className={`mt-1 h-2 w-2 rounded-full shrink-0 ${
                       item.type === "alert" ? "bg-destructive" :
-                      item.type === "warning" ? "bg-yellow-500" :
+                      item.type === "warning" ? "bg-amber-500" :
                       item.type === "success" ? "bg-secondary" : "bg-primary"
                     }`} />
                     <div className="flex-1">
                       <p className="text-sm text-foreground">{item.text}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">{item.time}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </CardContent>

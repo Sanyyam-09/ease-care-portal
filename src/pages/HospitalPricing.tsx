@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Star, BadgeCheck, Building2, Bed, Gift, ChevronDown, ChevronUp, IndianRupee } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
@@ -44,7 +45,7 @@ const HospitalPricing = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Hospital Pricing Comparison</h1>
         <p className="text-muted-foreground mb-2">Compare prices for: <strong className="text-foreground">{procedure}</strong></p>
         <p className="text-sm text-muted-foreground mb-8">View room photos, price breakdowns, certificates, and special offers</p>
@@ -179,7 +180,7 @@ const HospitalPricing = () => {
             );
           })}
         </div>
-      </div>
+      </motion.div>
       <Footer />
     </div>
   );

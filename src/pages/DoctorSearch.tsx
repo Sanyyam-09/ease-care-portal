@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Star, BadgeCheck, MapPin, Video, MessageSquare } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -62,7 +63,7 @@ const DoctorSearch = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Find a Doctor</h1>
         <p className="text-muted-foreground mb-8">Search Indian doctors by symptoms, specialization, or name</p>
 
@@ -82,7 +83,8 @@ const DoctorSearch = () => {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((doc, index) => (
-            <div key={doc.id} className="rounded-xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-card-hover">
+            <motion.div key={doc.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
+              className="rounded-xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-card-hover">
               <div className="flex items-start gap-4">
                 <img
                   src={getDoctorAvatar(doc.name, index)}
@@ -168,10 +170,10 @@ const DoctorSearch = () => {
                   </DialogContent>
                 </Dialog>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
       <Footer />
     </div>
   );
