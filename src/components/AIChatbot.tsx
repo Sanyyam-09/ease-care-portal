@@ -131,7 +131,7 @@ const AIChatbot = () => {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-24 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:scale-110 transition-transform"
+        className="fixed bottom-6 left-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:scale-110 transition-transform"
         aria-label="Open AI Chatbot"
       >
         <MessageSquare className="h-6 w-6" />
