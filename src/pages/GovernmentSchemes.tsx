@@ -34,7 +34,7 @@ const GovernmentSchemes = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Government Schemes & NGO Services</h1>
         <p className="text-muted-foreground mb-8">Find healthcare schemes you're eligible for and free medical services near you</p>
 
