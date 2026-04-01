@@ -109,7 +109,7 @@ const GovernmentSchemes = () => {
             </div>
           </TabsContent>
         </Tabs>
-      </div>
+      </motion.div>
       <Footer />
     </div>
   );

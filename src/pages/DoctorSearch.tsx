@@ -171,10 +171,10 @@ const DoctorSearch = () => {
                   </DialogContent>
                 </Dialog>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
       <Footer />
     </div>
   );

@@ -181,7 +181,7 @@ const HospitalPricing = () => {
             );
           })}
         </div>
-      </div>
+      </motion.div>
       <Footer />
     </div>
   );
