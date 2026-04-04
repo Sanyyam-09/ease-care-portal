@@ -180,6 +180,34 @@ const PatientProfile = () => {
           <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
         ) : (
           <div className="grid gap-6">
+            {/* Avatar */}
+            <Card>
+              <CardContent className="flex items-center gap-6 pt-6">
+                <div className="relative group">
+                  <Avatar className="h-24 w-24 text-2xl">
+                    <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
+                    <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">{initials || "?"}</AvatarFallback>
+                  </Avatar>
+                  <button
+                    onClick={() => avatarInputRef.current?.click()}
+                    disabled={uploadingAvatar}
+                    className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  >
+                    {uploadingAvatar ? <Loader2 className="h-6 w-6 text-white animate-spin" /> : <Camera className="h-6 w-6 text-white" />}
+                  </button>
+                  <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-foreground">{profile.full_name || "Your Name"}</h2>
+                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                  <Button variant="outline" size="sm" className="mt-2 gap-1.5" onClick={() => avatarInputRef.current?.click()} disabled={uploadingAvatar}>
+                    <Camera className="h-3.5 w-3.5" />
+                    {uploadingAvatar ? "Uploading..." : "Change Photo"}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Personal Info */}
             <Card>
               <CardHeader>
