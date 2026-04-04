@@ -41,11 +41,13 @@ const PatientProfile = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [newAllergy, setNewAllergy] = useState("");
+  const avatarInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState<ProfileData>({
     full_name: "", phone: "", date_of_birth: "", gender: "",
     address: "", city: "", state: "", pin_code: "",
-    blood_type: "", allergies: [],
+    blood_type: "", allergies: [], avatar_url: "",
     emergency_contact_name: "", emergency_contact_phone: "", emergency_contact_relation: "",
   });
 
