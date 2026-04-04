@@ -73,6 +73,7 @@ const PatientProfile = () => {
         pin_code: data.pin_code || "",
         blood_type: (data as any).blood_type || "",
         allergies: (data as any).allergies || [],
+        avatar_url: data.avatar_url || "",
         emergency_contact_name: (data as any).emergency_contact_name || "",
         emergency_contact_phone: (data as any).emergency_contact_phone || "",
         emergency_contact_relation: (data as any).emergency_contact_relation || "",
