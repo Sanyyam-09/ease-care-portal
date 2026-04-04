@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,7 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { User, Heart, Phone, Shield, X, Plus, Save, Loader2 } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { User, Heart, Phone, Shield, X, Plus, Save, Loader2, Camera } from "lucide-react";
 import { Navigate } from "react-router-dom";
 
 const BLOOD_TYPES = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -32,6 +33,7 @@ interface ProfileData {
   emergency_contact_name: string;
   emergency_contact_phone: string;
   emergency_contact_relation: string;
+  avatar_url: string;
 }
 
 const PatientProfile = () => {
@@ -39,11 +41,13 @@ const PatientProfile = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [newAllergy, setNewAllergy] = useState("");
+  const avatarInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState<ProfileData>({
     full_name: "", phone: "", date_of_birth: "", gender: "",
     address: "", city: "", state: "", pin_code: "",
-    blood_type: "", allergies: [],
+    blood_type: "", allergies: [], avatar_url: "",
     emergency_contact_name: "", emergency_contact_phone: "", emergency_contact_relation: "",
   });
 
@@ -69,6 +73,7 @@ const PatientProfile = () => {
         pin_code: data.pin_code || "",
         blood_type: (data as any).blood_type || "",
         allergies: (data as any).allergies || [],
+        avatar_url: data.avatar_url || "",
         emergency_contact_name: (data as any).emergency_contact_name || "",
         emergency_contact_phone: (data as any).emergency_contact_phone || "",
         emergency_contact_relation: (data as any).emergency_contact_relation || "",
@@ -106,6 +111,31 @@ const PatientProfile = () => {
     }
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop();
+    const filePath = `${user.id}/avatar.${ext}`;
+
+    // Remove old avatar if exists
+    await supabase.storage.from("avatars").remove([filePath]);
+
+    const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file, { upsert: true });
+    if (uploadError) {
+      toast({ title: "Upload failed", description: uploadError.message, variant: "destructive" });
+      setUploadingAvatar(false);
+      return;
+    }
+
+    const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(filePath);
+
+    await supabase.from("profiles").update({ avatar_url: publicUrl } as any).eq("user_id", user.id);
+    setProfile(p => ({ ...p, avatar_url: publicUrl }));
+    setUploadingAvatar(false);
+    toast({ title: "Avatar updated!" });
+  };
+
   const addAllergy = () => {
     const trimmed = newAllergy.trim();
     if (trimmed && !profile.allergies.includes(trimmed)) {
@@ -121,6 +151,13 @@ const PatientProfile = () => {
   const update = (field: keyof ProfileData, value: string) => {
     setProfile(p => ({ ...p, [field]: value }));
   };
+
+  const initials = profile.full_name
+    .split(" ")
+    .map(n => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   if (authLoading) return null;
   if (!user) return <Navigate to="/login" replace />;
@@ -143,6 +180,34 @@ const PatientProfile = () => {
           <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
         ) : (
           <div className="grid gap-6">
+            {/* Avatar */}
+            <Card>
+              <CardContent className="flex items-center gap-6 pt-6">
+                <div className="relative group">
+                  <Avatar className="h-24 w-24 text-2xl">
+                    <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
+                    <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">{initials || "?"}</AvatarFallback>
+                  </Avatar>
+                  <button
+                    onClick={() => avatarInputRef.current?.click()}
+                    disabled={uploadingAvatar}
+                    className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  >
+                    {uploadingAvatar ? <Loader2 className="h-6 w-6 text-white animate-spin" /> : <Camera className="h-6 w-6 text-white" />}
+                  </button>
+                  <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-foreground">{profile.full_name || "Your Name"}</h2>
+                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                  <Button variant="outline" size="sm" className="mt-2 gap-1.5" onClick={() => avatarInputRef.current?.click()} disabled={uploadingAvatar}>
+                    <Camera className="h-3.5 w-3.5" />
+                    {uploadingAvatar ? "Uploading..." : "Change Photo"}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Personal Info */}
             <Card>
               <CardHeader>
