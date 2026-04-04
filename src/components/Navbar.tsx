@@ -55,6 +55,12 @@ const Navbar = () => {
           <ThemeToggle />
           {user ? (
             <>
+              <Link to="/dashboard/profile" className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                  {profile?.avatar_url && <AvatarImage src={profile.avatar_url} alt="Profile" />}
+                  <AvatarFallback className="text-xs bg-primary text-primary-foreground">{initials}</AvatarFallback>
+                </Avatar>
+              </Link>
               <Button variant="ghost" size="sm" asChild><Link to="/dashboard">{t("nav.dashboard")}</Link></Button>
               <Button variant="outline" size="sm" onClick={() => signOut()}>{t("nav.logout")}</Button>
             </>

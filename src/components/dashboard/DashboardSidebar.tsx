@@ -78,6 +78,26 @@ const DashboardSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
+        <Link to="/dashboard/profile" className="flex items-center gap-3 rounded-lg p-2 hover:bg-sidebar-accent/50 transition-colors">
+          <Avatar className="h-9 w-9 shrink-0">
+            {profile?.avatar_url && <AvatarImage src={profile.avatar_url} alt="Profile" />}
+            <AvatarFallback className="text-xs bg-primary text-primary-foreground">{initials}</AvatarFallback>
+          </Avatar>
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">{profile?.full_name || "Patient"}</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+            </div>
+          )}
+        </Link>
+        {!collapsed && (
+          <button onClick={() => signOut()} className="flex items-center gap-2 w-full rounded-lg p-2 text-sm text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors">
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </button>
+        )}
+      </SidebarFooter>
     </Sidebar>
   );
 };
