@@ -37,8 +37,17 @@ const doctorItems = [
 const DashboardSidebar = () => {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  // For now, show patient items; doctor items can be shown based on role
+  const { user, signOut } = useAuth();
+  const [profile, setProfile] = useState<{ avatar_url: string | null; full_name: string | null } | null>(null);
   const items = patientItems;
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("avatar_url, full_name").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => { if (data) setProfile(data); });
+  }, [user]);
+
+  const initials = profile?.full_name?.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "U";
 
   return (
     <Sidebar collapsible="icon">
