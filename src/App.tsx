@@ -68,6 +68,7 @@ const App = () => (
                 <Route path="/book-appointment" element={<BookAppointment />} />
                 <Route path="/doctor-register" element={<DoctorRegister />} />
                 <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+                <Route path="/dashboard/profile" element={<PatientProfile />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <FloatingSOSButton />
