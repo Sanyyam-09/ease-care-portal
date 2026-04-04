@@ -33,6 +33,7 @@ interface ProfileData {
   emergency_contact_name: string;
   emergency_contact_phone: string;
   emergency_contact_relation: string;
+  avatar_url: string;
 }
 
 const PatientProfile = () => {
