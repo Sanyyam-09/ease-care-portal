@@ -111,6 +111,31 @@ const PatientProfile = () => {
     }
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop();
+    const filePath = `${user.id}/avatar.${ext}`;
+
+    // Remove old avatar if exists
+    await supabase.storage.from("avatars").remove([filePath]);
+
+    const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file, { upsert: true });
+    if (uploadError) {
+      toast({ title: "Upload failed", description: uploadError.message, variant: "destructive" });
+      setUploadingAvatar(false);
+      return;
+    }
+
+    const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(filePath);
+
+    await supabase.from("profiles").update({ avatar_url: publicUrl } as any).eq("user_id", user.id);
+    setProfile(p => ({ ...p, avatar_url: publicUrl }));
+    setUploadingAvatar(false);
+    toast({ title: "Avatar updated!" });
+  };
+
   const addAllergy = () => {
     const trimmed = newAllergy.trim();
     if (trimmed && !profile.allergies.includes(trimmed)) {
@@ -126,6 +151,13 @@ const PatientProfile = () => {
   const update = (field: keyof ProfileData, value: string) => {
     setProfile(p => ({ ...p, [field]: value }));
   };
+
+  const initials = profile.full_name
+    .split(" ")
+    .map(n => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   if (authLoading) return null;
   if (!user) return <Navigate to="/login" replace />;
