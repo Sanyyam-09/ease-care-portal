@@ -13,6 +13,15 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, signOut } = useAuth();
   const t = useTranslation();
+  const [profile, setProfile] = useState<{ avatar_url: string | null; full_name: string | null } | null>(null);
+
+  useEffect(() => {
+    if (!user) { setProfile(null); return; }
+    supabase.from("profiles").select("avatar_url, full_name").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => { if (data) setProfile(data); });
+  }, [user]);
+
+  const initials = profile?.full_name?.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "U";
 
   const navLinks = [
     { label: t("nav.findDoctors"), href: "/doctors" },
