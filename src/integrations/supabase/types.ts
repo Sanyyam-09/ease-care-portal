@@ -448,10 +448,15 @@ export type Database = {
       profiles: {
         Row: {
           address: string | null
+          allergies: string[] | null
           avatar_url: string | null
+          blood_type: string | null
           city: string | null
           created_at: string
           date_of_birth: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          emergency_contact_relation: string | null
           full_name: string | null
           gender: string | null
           id: string
@@ -463,10 +468,15 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          allergies?: string[] | null
           avatar_url?: string | null
+          blood_type?: string | null
           city?: string | null
           created_at?: string
           date_of_birth?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relation?: string | null
           full_name?: string | null
           gender?: string | null
           id?: string
@@ -478,10 +488,15 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          allergies?: string[] | null
           avatar_url?: string | null
+          blood_type?: string | null
           city?: string | null
           created_at?: string
           date_of_birth?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relation?: string | null
           full_name?: string | null
           gender?: string | null
           id?: string
