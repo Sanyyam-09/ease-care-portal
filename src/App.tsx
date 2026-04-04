@@ -30,6 +30,7 @@ import HealthAwareness from "./pages/HealthAwareness";
 import BookAppointment from "./pages/BookAppointment";
 import DoctorRegister from "./pages/DoctorRegister";
 import DoctorDashboard from "./pages/DoctorDashboard";
+import PatientProfile from "./pages/PatientProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
