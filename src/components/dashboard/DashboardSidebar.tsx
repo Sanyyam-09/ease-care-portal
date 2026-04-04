@@ -1,14 +1,17 @@
+import { useState, useEffect } from "react";
 import {
   LayoutDashboard, Stethoscope, CalendarDays, FileText, FlaskConical,
-  Pill, MapPin, Landmark, Siren, UserCircle, Brain, BookOpen, UserPlus,
+  Pill, MapPin, Landmark, Siren, UserCircle, Brain, BookOpen, UserPlus, LogOut,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Link } from "react-router-dom";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
-  SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,
+  SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter, useSidebar,
 } from "@/components/ui/sidebar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const patientItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -34,8 +37,17 @@ const doctorItems = [
 const DashboardSidebar = () => {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  // For now, show patient items; doctor items can be shown based on role
+  const { user, signOut } = useAuth();
+  const [profile, setProfile] = useState<{ avatar_url: string | null; full_name: string | null } | null>(null);
   const items = patientItems;
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("avatar_url, full_name").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => { if (data) setProfile(data); });
+  }, [user]);
+
+  const initials = profile?.full_name?.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "U";
 
   return (
     <Sidebar collapsible="icon">
@@ -66,6 +78,26 @@ const DashboardSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
+        <Link to="/dashboard/profile" className="flex items-center gap-3 rounded-lg p-2 hover:bg-sidebar-accent/50 transition-colors">
+          <Avatar className="h-9 w-9 shrink-0">
+            {profile?.avatar_url && <AvatarImage src={profile.avatar_url} alt="Profile" />}
+            <AvatarFallback className="text-xs bg-primary text-primary-foreground">{initials}</AvatarFallback>
+          </Avatar>
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">{profile?.full_name || "Patient"}</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+            </div>
+          )}
+        </Link>
+        {!collapsed && (
+          <button onClick={() => signOut()} className="flex items-center gap-2 w-full rounded-lg p-2 text-sm text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors">
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </button>
+        )}
+      </SidebarFooter>
     </Sidebar>
   );
 };
