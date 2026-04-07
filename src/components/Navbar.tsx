@@ -48,7 +48,8 @@ const Navbar = () => {
   const allLinks = [...primaryLinks, ...moreLinks];
 
   return (
-    <nav className={`sticky top-0 z-50 border-b transition-all duration-300 ${scrolled ? "border-border/50 bg-card/95 backdrop-blur-xl shadow-lg shadow-primary/5" : "border-border bg-card/90 backdrop-blur-lg"}`}>
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "bg-card/95 backdrop-blur-xl shadow-lg shadow-primary/5" : "bg-card/90 backdrop-blur-lg"}`}>
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary via-accent to-primary opacity-80" />
       <div className={`container mx-auto flex items-center justify-between px-4 transition-all duration-300 ${scrolled ? "h-12" : "h-14"}`}>
         <Link to="/" className="flex items-center gap-2 group">
           <div className={`flex items-center justify-center rounded-lg bg-primary transition-all duration-300 ${scrolled ? "h-7 w-7" : "h-8 w-8"}`}>
