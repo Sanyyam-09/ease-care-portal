@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Siren } from "lucide-react";
+import { Menu, X, Siren, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -8,6 +8,9 @@ import LanguageSelector from "@/components/LanguageSelector";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -23,39 +26,56 @@ const Navbar = () => {
 
   const initials = profile?.full_name?.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "U";
 
-  const navLinks = [
+  const primaryLinks = [
     { label: t("nav.findDoctors"), href: "/doctors" },
-    { label: t("nav.hospitalPricing"), href: "/hospital-pricing" },
     { label: t("nav.symptomChecker"), href: "/symptom-checker" },
     { label: t("nav.pharmacy"), href: "/pharmacy" },
+  ];
+
+  const moreLinks = [
+    { label: t("nav.hospitalPricing"), href: "/hospital-pricing" },
     { label: t("nav.govSchemes"), href: "/government-schemes" },
     { label: t("nav.healthAwareness"), href: "/health-awareness" },
   ];
 
+  const allLinks = [...primaryLinks, ...moreLinks];
+
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-card/90 backdrop-blur-lg">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <span className="text-lg font-bold text-primary-foreground">C</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+            <span className="text-sm font-bold text-primary-foreground">C</span>
           </div>
-          <span className="text-xl font-heading font-bold text-foreground">Cureva</span>
+          <span className="text-lg font-heading font-bold text-foreground">Cureva</span>
         </Link>
 
-        <div className="hidden items-center gap-6 lg:flex">
-          {navLinks.map((link) => (
+        <div className="hidden items-center gap-5 lg:flex">
+          {primaryLinks.map((link) => (
             <Link key={link.href} to={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
               {link.label}
             </Link>
           ))}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary outline-none">
+              More <ChevronDown className="h-3.5 w-3.5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="min-w-[180px]">
+              {moreLinks.map((link) => (
+                <DropdownMenuItem key={link.href} asChild>
+                  <Link to={link.href} className="w-full">{link.label}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-1.5 lg:flex">
           <LanguageSelector />
           <ThemeToggle />
           {user ? (
             <>
-              <Link to="/dashboard/profile" className="flex items-center gap-2">
+              <Link to="/dashboard/profile">
                 <Avatar className="h-8 w-8">
                   {profile?.avatar_url && <AvatarImage src={profile.avatar_url} alt="Profile" />}
                   <AvatarFallback className="text-xs bg-primary text-primary-foreground">{initials}</AvatarFallback>
@@ -70,16 +90,15 @@ const Navbar = () => {
               <Button size="sm" asChild><Link to="/register">{t("auth.signUp")}</Link></Button>
             </>
           )}
-          <Button size="sm" variant="destructive" className="gap-1.5 animate-pulse-emergency" asChild>
+          <Button size="sm" variant="destructive" className="gap-1 animate-pulse-emergency" asChild>
             <Link to="/emergency"><Siren className="h-4 w-4" />SOS</Link>
           </Button>
         </div>
 
         <div className="flex items-center gap-1 lg:hidden">
-          <LanguageSelector />
           <ThemeToggle />
-          <Button size="sm" variant="destructive" className="gap-1 animate-pulse-emergency" asChild>
-            <Link to="/emergency"><Siren className="h-4 w-4" />SOS</Link>
+          <Button size="icon" variant="destructive" className="h-8 w-8 animate-pulse-emergency" asChild>
+            <Link to="/emergency"><Siren className="h-4 w-4" /></Link>
           </Button>
           <button className="p-2 text-foreground" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -89,12 +108,15 @@ const Navbar = () => {
 
       {mobileOpen && (
         <div className="border-t border-border bg-card px-4 pb-4 lg:hidden">
-          <div className="flex flex-col gap-3 pt-3">
-            {navLinks.map((link) => (
+          <div className="flex flex-col gap-2 pt-3">
+            {allLinks.map((link) => (
               <Link key={link.href} to={link.href} className="text-sm font-medium text-muted-foreground py-2" onClick={() => setMobileOpen(false)}>
                 {link.label}
               </Link>
             ))}
+            <div className="flex items-center gap-2 pt-2">
+              <LanguageSelector />
+            </div>
             <div className="flex gap-3 pt-2">
               {user ? (
                 <>
