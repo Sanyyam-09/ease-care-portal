@@ -48,8 +48,8 @@ const Navbar = () => {
   const allLinks = [...primaryLinks, ...moreLinks];
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-card/90 backdrop-blur-lg">
-      <div className="container mx-auto flex h-14 items-center justify-between px-4">
+    <nav className={`sticky top-0 z-50 border-b transition-all duration-300 ${scrolled ? "border-border/50 bg-card/95 backdrop-blur-xl shadow-lg shadow-primary/5" : "border-border bg-card/90 backdrop-blur-lg"}`}>
+      <div className={`container mx-auto flex items-center justify-between px-4 transition-all duration-300 ${scrolled ? "h-12" : "h-14"}`}>
         <Link to="/" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
             <span className="text-sm font-bold text-primary-foreground">C</span>
