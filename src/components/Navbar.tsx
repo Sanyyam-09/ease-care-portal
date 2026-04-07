@@ -50,11 +50,11 @@ const Navbar = () => {
   return (
     <nav className={`sticky top-0 z-50 border-b transition-all duration-300 ${scrolled ? "border-border/50 bg-card/95 backdrop-blur-xl shadow-lg shadow-primary/5" : "border-border bg-card/90 backdrop-blur-lg"}`}>
       <div className={`container mx-auto flex items-center justify-between px-4 transition-all duration-300 ${scrolled ? "h-12" : "h-14"}`}>
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <span className="text-sm font-bold text-primary-foreground">C</span>
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className={`flex items-center justify-center rounded-lg bg-primary transition-all duration-300 ${scrolled ? "h-7 w-7" : "h-8 w-8"}`}>
+            <span className={`font-bold text-primary-foreground transition-all duration-300 ${scrolled ? "text-xs" : "text-sm"}`}>C</span>
           </div>
-          <span className="text-lg font-heading font-bold text-foreground">Cureva</span>
+          <span className={`font-heading font-bold text-foreground transition-all duration-300 ${scrolled ? "text-base" : "text-lg"}`}>Cureva</span>
         </Link>
 
         <div className="hidden items-center gap-5 lg:flex">
