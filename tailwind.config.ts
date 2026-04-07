@@ -97,12 +97,17 @@ export default {
           "0%, 100%": { boxShadow: "0 0 0 0 hsl(0 100% 65% / 0.5)" },
           "50%": { boxShadow: "0 0 0 12px hsl(0 100% 65% / 0)" },
         },
+        "navbar-shimmer": {
+          "0%": { backgroundPosition: "200% 0" },
+          "100%": { backgroundPosition: "-200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.5s ease-out forwards",
         "pulse-emergency": "pulse-emergency 2s ease-in-out infinite",
+        "navbar-shimmer": "navbar-shimmer 3s linear infinite",
       },
     },
   },
