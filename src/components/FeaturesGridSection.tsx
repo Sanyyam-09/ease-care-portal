@@ -18,27 +18,33 @@ const FeaturesGridSection = () => {
   return (
     <section className="py-20 bg-surface-elevated">
       <div className="container mx-auto px-4">
-        <div className="mb-12 text-center">
+        <motion.div
+          className="mb-12 text-center"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
           <h2 className="text-3xl font-bold text-foreground md:text-4xl">Connected Healthcare Ecosystem</h2>
           <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
             A complete healthcare platform built for everyone
           </p>
-        </div>
+        </motion.div>
 
         <motion.div
           className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05 } } }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
         >
           {features.map((f) => (
             <motion.div
               key={f.title}
-              variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}
-              className="rounded-xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-card-hover"
+              variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}
+              className="card-premium rounded-xl border border-border bg-card p-6 shadow-card group cursor-default"
             >
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                 <f.icon className="h-5 w-5" />
               </div>
               <h3 className="font-semibold text-card-foreground text-sm">{f.title}</h3>

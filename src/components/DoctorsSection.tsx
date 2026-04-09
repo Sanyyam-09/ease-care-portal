@@ -38,7 +38,7 @@ const container = {
 };
 
 const item = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
@@ -65,10 +65,10 @@ const DoctorsSection = () => {
             <motion.div
               key={doc.name}
               variants={item}
-              className="rounded-xl border border-border bg-card p-6 shadow-card transition-shadow hover:shadow-card-hover"
+              className="card-premium rounded-xl border border-border bg-card p-6 shadow-card group"
             >
               <div className="flex items-start gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-lg">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-lg transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                   {doc.image}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -93,7 +93,7 @@ const DoctorsSection = () => {
                 <div className="flex items-center gap-2">
                   {doc.available && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-medical-green-light px-2.5 py-0.5 text-xs font-medium text-medical-green">
-                      <span className="h-1.5 w-1.5 rounded-full bg-medical-green" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-medical-green animate-pulse" />
                       Available
                     </span>
                   )}
