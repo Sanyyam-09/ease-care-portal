@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import FloatingSOSButton from "@/components/FloatingSOSButton";
 import AIChatbot from "@/components/AIChatbot";
+import PageTransition from "@/components/PageTransition";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -35,6 +37,42 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Landing /></PageTransition>} />
+        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+        <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
+        <Route path="/forgot-password" element={<PageTransition><ForgotPassword /></PageTransition>} />
+        <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
+        <Route path="/admin-login" element={<PageTransition><AdminLogin /></PageTransition>} />
+        <Route path="/admin" element={<PageTransition><AdminDashboard /></PageTransition>} />
+        <Route path="/home" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
+        <Route path="/dashboard/*" element={<PageTransition><Dashboard /></PageTransition>} />
+        <Route path="/doctors" element={<PageTransition><DoctorSearch /></PageTransition>} />
+        <Route path="/hospital-pricing" element={<PageTransition><HospitalPricing /></PageTransition>} />
+        <Route path="/government-schemes" element={<PageTransition><GovernmentSchemes /></PageTransition>} />
+        <Route path="/symptom-checker" element={<PageTransition><SymptomChecker /></PageTransition>} />
+        <Route path="/consultation" element={<PageTransition><VideoConsultation /></PageTransition>} />
+        <Route path="/medical-records" element={<PageTransition><MedicalRecords /></PageTransition>} />
+        <Route path="/pharmacy" element={<PageTransition><Pharmacy /></PageTransition>} />
+        <Route path="/lab-tests" element={<PageTransition><LabTests /></PageTransition>} />
+        <Route path="/emergency" element={<PageTransition><EmergencySOS /></PageTransition>} />
+        <Route path="/health-awareness" element={<PageTransition><HealthAwareness /></PageTransition>} />
+        <Route path="/book-appointment" element={<PageTransition><BookAppointment /></PageTransition>} />
+        <Route path="/doctor-register" element={<PageTransition><DoctorRegister /></PageTransition>} />
+        <Route path="/doctor-dashboard" element={<PageTransition><DoctorDashboard /></PageTransition>} />
+        <Route path="/dashboard/profile" element={<PageTransition><PatientProfile /></PageTransition>} />
+        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
@@ -44,33 +82,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AuthProvider>
-              <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/admin-login" element={<AdminLogin />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/home" element={<Index />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/dashboard/*" element={<Dashboard />} />
-                <Route path="/doctors" element={<DoctorSearch />} />
-                <Route path="/hospital-pricing" element={<HospitalPricing />} />
-                <Route path="/government-schemes" element={<GovernmentSchemes />} />
-                <Route path="/symptom-checker" element={<SymptomChecker />} />
-                <Route path="/consultation" element={<VideoConsultation />} />
-                <Route path="/medical-records" element={<MedicalRecords />} />
-                <Route path="/pharmacy" element={<Pharmacy />} />
-                <Route path="/lab-tests" element={<LabTests />} />
-                <Route path="/emergency" element={<EmergencySOS />} />
-                <Route path="/health-awareness" element={<HealthAwareness />} />
-                <Route path="/book-appointment" element={<BookAppointment />} />
-                <Route path="/doctor-register" element={<DoctorRegister />} />
-                <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-                <Route path="/dashboard/profile" element={<PatientProfile />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <AnimatedRoutes />
               <FloatingSOSButton />
               <AIChatbot />
             </AuthProvider>
