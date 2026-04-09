@@ -38,27 +38,33 @@ const HowItWorksSection = () => {
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
-        <div className="mb-12 text-center">
+        <motion.div
+          className="mb-12 text-center"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
           <h2 className="text-3xl font-bold text-foreground md:text-4xl">How Cureva Works</h2>
           <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
             Get quality healthcare in three simple steps
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid gap-8 md:grid-cols-3 mb-16">
           {steps.map((s, i) => (
             <motion.div
               key={s.title}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="relative rounded-xl border border-border bg-card p-8 text-center shadow-card"
+              transition={{ duration: 0.4, delay: i * 0.12 }}
+              className="card-premium relative rounded-xl border border-border bg-card p-8 text-center shadow-card group"
             >
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground shadow-lg shadow-primary/25">
                 Step {s.step}
               </div>
-              <div className={`mx-auto mb-4 mt-2 inline-flex h-14 w-14 items-center justify-center rounded-xl ${s.color}`}>
+              <div className={`mx-auto mb-4 mt-2 inline-flex h-14 w-14 items-center justify-center rounded-xl transition-colors duration-300 ${s.color}`}>
                 <s.icon className="h-7 w-7" />
               </div>
               <h3 className="text-lg font-semibold text-card-foreground">{s.title}</h3>
@@ -73,22 +79,29 @@ const HowItWorksSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="rounded-xl border border-border bg-card p-6 shadow-card"
+          className="card-premium rounded-xl border border-border bg-card p-6 shadow-card"
         >
           <p className="text-center text-sm font-medium text-muted-foreground mb-6">Patient Journey Flow</p>
           <div className="flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
             {flowSteps.map((step, i) => (
-              <div key={step.label} className="flex items-center gap-2 sm:gap-4">
+              <motion.div
+                key={step.label}
+                className="flex items-center gap-2 sm:gap-4"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.08 }}
+              >
                 <div className="flex flex-col items-center gap-1.5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
                     <step.icon className="h-5 w-5" />
                   </div>
                   <span className="text-xs font-medium text-foreground">{step.label}</span>
                 </div>
                 {i < flowSteps.length - 1 && (
-                  <span className="text-muted-foreground text-lg font-light">→</span>
+                  <span className="text-primary text-lg font-light">→</span>
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
