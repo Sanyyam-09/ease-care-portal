@@ -107,7 +107,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.5s ease-out forwards",
         "pulse-emergency": "pulse-emergency 2s ease-in-out infinite",
-        "navbar-shimmer": "navbar-shimmer 3s linear infinite",
+        "navbar-shimmer": "navbar-shimmer 4.5s linear infinite",
       },
     },
   },
