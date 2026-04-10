@@ -80,6 +80,7 @@ const Navbar = () => {
         </div>
 
         <div className="hidden items-center gap-1.5 lg:flex">
+          <SmartSearchBar />
           <LanguageSelector />
           <ThemeToggle />
           {user ? (
