@@ -6,6 +6,7 @@ import FeaturesGridSection from "@/components/FeaturesGridSection";
 import DoctorsSection from "@/components/DoctorsSection";
 import TrustSection from "@/components/TrustSection";
 import StatsSection from "@/components/StatsSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import Footer from "@/components/Footer";
 import FloatingSOSButton from "@/components/FloatingSOSButton";
 
