@@ -20,6 +20,7 @@ const Index = () => {
       <FeaturesGridSection />
       <DoctorsSection />
       <TrustSection />
+      <TestimonialsSection />
       <StatsSection />
       <Footer />
       <FloatingSOSButton />
