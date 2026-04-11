@@ -16,7 +16,6 @@ const quickActions = [
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
-  if (!authLoading && !user) return <Navigate to="/login" replace />;
   const [profile, setProfile] = useState<any>(null);
   const [appointmentCount, setAppointmentCount] = useState(0);
   const [recordCount, setRecordCount] = useState(0);
@@ -39,6 +38,8 @@ const Dashboard = () => {
     };
     fetchData();
   }, [user]);
+
+  if (!authLoading && !user) return <Navigate to="/login" replace />;
 
   const dashboardCards = [
     {
