@@ -57,7 +57,7 @@ const AnimatedRoutes = () => {
         <Route path="/hospital-pricing" element={<PageTransition><HospitalPricing /></PageTransition>} />
         <Route path="/government-schemes" element={<PageTransition><GovernmentSchemes /></PageTransition>} />
         <Route path="/symptom-checker" element={<PageTransition><SymptomChecker /></PageTransition>} />
-        <Route path="/consultation" element={<PageTransition><VideoConsultation /></PageTransition>} />
+        <Route path="/video-consultation" element={<PageTransition><VideoConsultation /></PageTransition>} />
         <Route path="/medical-records" element={<PageTransition><MedicalRecords /></PageTransition>} />
         <Route path="/pharmacy" element={<PageTransition><Pharmacy /></PageTransition>} />
         <Route path="/lab-tests" element={<PageTransition><LabTests /></PageTransition>} />

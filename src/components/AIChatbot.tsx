@@ -1,13 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, forwardRef } from "react";
 import { MessageSquare, Send, X, Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const AIChatbot = () => {
+const AIChatbot = forwardRef<HTMLDivElement>((_, ref) => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -46,7 +45,6 @@ const AIChatbot = () => {
         throw new Error(err.error || "AI service unavailable");
       }
 
-      // Stream response
       const reader = resp.body?.getReader();
       const decoder = new TextDecoder();
       let assistantText = "";
@@ -89,7 +87,6 @@ const AIChatbot = () => {
     setLoading(false);
   };
 
-  // Voice input
   const toggleVoice = () => {
     if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
       alert("Voice input not supported in this browser");
@@ -117,7 +114,6 @@ const AIChatbot = () => {
     setListening(true);
   };
 
-  // TTS
   const speak = (text: string) => {
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -140,8 +136,7 @@ const AIChatbot = () => {
   }
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 w-[360px] max-h-[500px] rounded-xl border border-border bg-card shadow-2xl flex flex-col overflow-hidden">
-      {/* Header */}
+    <div ref={ref} className="fixed bottom-6 left-6 z-50 w-[360px] max-h-[500px] rounded-xl border border-border bg-card shadow-2xl flex flex-col overflow-hidden">
       <div className="flex items-center justify-between bg-primary px-4 py-3">
         <div className="flex items-center gap-2">
           <MessageSquare className="h-5 w-5 text-primary-foreground" />
@@ -152,7 +147,6 @@ const AIChatbot = () => {
         </button>
       </div>
 
-      {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[280px]">
         {messages.length === 0 && (
           <div className="text-center text-sm text-muted-foreground py-8">
@@ -181,7 +175,6 @@ const AIChatbot = () => {
         )}
       </div>
 
-      {/* Input */}
       <div className="border-t border-border p-3 flex gap-2">
         <Button variant="ghost" size="icon" className="shrink-0" onClick={toggleVoice}>
           {listening ? <MicOff className="h-4 w-4 text-destructive" /> : <Mic className="h-4 w-4" />}
@@ -199,6 +192,8 @@ const AIChatbot = () => {
       </div>
     </div>
   );
-};
+});
+
+AIChatbot.displayName = "AIChatbot";
 
 export default AIChatbot;

@@ -1,10 +1,12 @@
+import { forwardRef } from "react";
 import { Siren } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const FloatingSOSButton = () => {
+const FloatingSOSButton = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <motion.div
+      ref={ref}
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       transition={{ delay: 1, type: "spring", stiffness: 200 }}
@@ -18,6 +20,8 @@ const FloatingSOSButton = () => {
       </Link>
     </motion.div>
   );
-};
+});
+
+FloatingSOSButton.displayName = "FloatingSOSButton";
 
 export default FloatingSOSButton;
