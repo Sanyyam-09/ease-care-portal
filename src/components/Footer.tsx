@@ -17,24 +17,35 @@ const Footer = () => {
             </p>
           </div>
 
-          {[
-            { title: "Services", links: ["Find Doctors", "Telemedicine", "Pharmacy", "Lab Tests"] },
-            { title: "Company", links: ["About Us", "Careers", "Press", "Contact"] },
-            { title: "Legal", links: ["Privacy Policy", "Terms of Service", "HIPAA Compliance"] },
-          ].map((col) => (
-            <div key={col.title}>
-              <h4 className="text-sm font-semibold text-foreground">{col.title}</h4>
-              <ul className="mt-3 space-y-2">
-                {col.links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">Services</h4>
+            <ul className="mt-3 space-y-2">
+              <li><Link to="/doctors" className="text-sm text-muted-foreground transition-colors hover:text-primary">Find Doctors</Link></li>
+              <li><Link to="/video-consultation" className="text-sm text-muted-foreground transition-colors hover:text-primary">Telemedicine</Link></li>
+              <li><Link to="/pharmacy" className="text-sm text-muted-foreground transition-colors hover:text-primary">Pharmacy</Link></li>
+              <li><Link to="/lab-tests" className="text-sm text-muted-foreground transition-colors hover:text-primary">Lab Tests</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">Features</h4>
+            <ul className="mt-3 space-y-2">
+              <li><Link to="/symptom-checker" className="text-sm text-muted-foreground transition-colors hover:text-primary">Symptom Checker</Link></li>
+              <li><Link to="/hospital-pricing" className="text-sm text-muted-foreground transition-colors hover:text-primary">Hospital Pricing</Link></li>
+              <li><Link to="/government-schemes" className="text-sm text-muted-foreground transition-colors hover:text-primary">Government Schemes</Link></li>
+              <li><Link to="/health-awareness" className="text-sm text-muted-foreground transition-colors hover:text-primary">Health Awareness</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">Account</h4>
+            <ul className="mt-3 space-y-2">
+              <li><Link to="/login" className="text-sm text-muted-foreground transition-colors hover:text-primary">Login</Link></li>
+              <li><Link to="/register" className="text-sm text-muted-foreground transition-colors hover:text-primary">Register</Link></li>
+              <li><Link to="/doctor-register" className="text-sm text-muted-foreground transition-colors hover:text-primary">Doctor Registration</Link></li>
+              <li><Link to="/emergency" className="text-sm text-muted-foreground transition-colors hover:text-primary">Emergency SOS</Link></li>
+            </ul>
+          </div>
         </div>
 
         <div className="mt-10 border-t border-border pt-6 text-center text-xs text-muted-foreground">

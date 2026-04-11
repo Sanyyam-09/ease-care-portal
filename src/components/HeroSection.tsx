@@ -81,7 +81,7 @@ const HeroSection = () => {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="gap-2">
-                <Link to="/consultation">
+                <Link to="/video-consultation">
                   <Video className="h-4 w-4" />
                   {t("hero.videoConsult")}
                 </Link>
