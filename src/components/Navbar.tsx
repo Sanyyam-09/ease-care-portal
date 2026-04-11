@@ -131,13 +131,13 @@ const Navbar = () => {
                   key={link.href}
                   to={link.href}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200",
+                    "group flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200",
                     isActive
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                   )}
                 >
-                  <Icon className="h-3.5 w-3.5" />
+                  <Icon className="h-3.5 w-3.5 transition-all duration-300 group-hover:scale-125 group-hover:text-primary group-hover:-translate-y-0.5" />
                   {link.label}
                 </Link>
               );
