@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { CalendarDays, FileText, Pill, Clock, Upload, Stethoscope, Video } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
@@ -10,12 +10,13 @@ import { useAuth } from "@/contexts/AuthContext";
 const quickActions = [
   { label: "Upload Reports", icon: Upload, href: "/medical-records" },
   { label: "Find Specialist", icon: Stethoscope, href: "/doctors" },
-  { label: "Book Video Call", icon: Video, href: "/consultation" },
+  { label: "Book Video Call", icon: Video, href: "/video-consultation" },
   { label: "Book Appointment", icon: CalendarDays, href: "/book-appointment" },
 ];
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  if (!authLoading && !user) return <Navigate to="/login" replace />;
   const [profile, setProfile] = useState<any>(null);
   const [appointmentCount, setAppointmentCount] = useState(0);
   const [recordCount, setRecordCount] = useState(0);
