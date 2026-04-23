@@ -4,7 +4,7 @@ import { Float, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
 const Capsule = ({ position, color, speed = 1 }: { position: [number, number, number]; color: string; speed?: number }) => {
-  const ref = useRef<THREE.Mesh>(null);
+  const ref = useRef<any>(null);
   useFrame((state) => {
     if (ref.current) {
       ref.current.rotation.x = Math.sin(state.clock.elapsedTime * speed * 0.3) * 0.3;
@@ -22,7 +22,7 @@ const Capsule = ({ position, color, speed = 1 }: { position: [number, number, nu
 };
 
 const Pill = ({ position, color1, color2, speed = 1 }: { position: [number, number, number]; color1: string; color2: string; speed?: number }) => {
-  const ref = useRef<THREE.Group>(null);
+  const ref = useRef<any>(null);
   useFrame((state) => {
     if (ref.current) {
       ref.current.rotation.y = state.clock.elapsedTime * speed * 0.2;
@@ -46,7 +46,7 @@ const Pill = ({ position, color1, color2, speed = 1 }: { position: [number, numb
 };
 
 const HeartBeat = ({ position, speed = 1 }: { position: [number, number, number]; speed?: number }) => {
-  const ref = useRef<THREE.Mesh>(null);
+  const ref = useRef<any>(null);
   useFrame((state) => {
     if (ref.current) {
       const scale = 1 + Math.sin(state.clock.elapsedTime * speed * 2) * 0.15;
@@ -64,7 +64,7 @@ const HeartBeat = ({ position, speed = 1 }: { position: [number, number, number]
 };
 
 const Stethoscope = ({ position, speed = 1 }: { position: [number, number, number]; speed?: number }) => {
-  const ref = useRef<THREE.Mesh>(null);
+  const ref = useRef<any>(null);
   useFrame((state) => {
     if (ref.current) {
       ref.current.rotation.z = Math.sin(state.clock.elapsedTime * speed * 0.3) * 0.3;
@@ -81,7 +81,7 @@ const Stethoscope = ({ position, speed = 1 }: { position: [number, number, numbe
 };
 
 const DNAHelix = ({ position, speed = 1 }: { position: [number, number, number]; speed?: number }) => {
-  const ref = useRef<THREE.Group>(null);
+  const ref = useRef<any>(null);
   useFrame((state) => {
     if (ref.current) {
       ref.current.rotation.y = state.clock.elapsedTime * speed * 0.4;
@@ -102,7 +102,7 @@ const DNAHelix = ({ position, speed = 1 }: { position: [number, number, number];
 };
 
 const CrossShape = ({ position, speed = 1 }: { position: [number, number, number]; speed?: number }) => {
-  const ref = useRef<THREE.Group>(null);
+  const ref = useRef<any>(null);
   useFrame((state) => {
     if (ref.current) {
       ref.current.rotation.z = state.clock.elapsedTime * speed * 0.15;
