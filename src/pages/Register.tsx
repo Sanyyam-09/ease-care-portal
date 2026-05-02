@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
@@ -26,6 +26,15 @@ const Register = () => {
   const { toast } = useToast();
   const { signUp } = useAuth();
   const navigate = useNavigate();
+  const statusRef = useRef<HTMLDivElement>(null);
+  const alertTitleId = "existing-account-title";
+  const alertDescId = "existing-account-desc";
+
+  useEffect(() => {
+    if (actionStatus && statusRef.current) {
+      statusRef.current.focus();
+    }
+  }, [actionStatus]);
 
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
 
@@ -177,11 +186,17 @@ const Register = () => {
             </div>
 
             {existingAccount && (
-              <Alert variant="destructive" className="mb-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>This email is already registered</AlertTitle>
+              <Alert
+                variant="destructive"
+                className="mb-4"
+                role="region"
+                aria-labelledby={alertTitleId}
+                aria-describedby={alertDescId}
+              >
+                <AlertCircle className="h-4 w-4" aria-hidden="true" />
+                <AlertTitle id={alertTitleId}>This email is already registered</AlertTitle>
                 <AlertDescription className="space-y-3">
-                  <p className="text-sm">
+                  <p id={alertDescId} className="text-sm">
                     An account with <span className="font-medium">{form.email}</span> already exists. If you haven't confirmed your email yet, resend the link. If you forgot your password, reset it.
                   </p>
                   <div className="flex flex-wrap gap-2 pt-1">
@@ -192,9 +207,16 @@ const Register = () => {
                       onClick={handleResendConfirmation}
                       disabled={actionLoading !== null || resendCooldown > 0}
                       aria-busy={actionLoading === "resend"}
+                      aria-label={
+                        actionLoading === "resend"
+                          ? "Sending confirmation email, please wait"
+                          : resendCooldown > 0
+                          ? `Resend confirmation available in ${resendCooldown} seconds`
+                          : "Resend confirmation email"
+                      }
                     >
                       {actionLoading === "resend" ? (
-                        <><Loader2 className="h-3.5 w-3.5 animate-spin" />Sending…</>
+                        <><Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />Sending…</>
                       ) : resendCooldown > 0 ? (
                         `Resend in ${resendCooldown}s`
                       ) : (
@@ -208,36 +230,60 @@ const Register = () => {
                       onClick={handleSendReset}
                       disabled={actionLoading !== null}
                       aria-busy={actionLoading === "reset"}
+                      aria-label={
+                        actionLoading === "reset"
+                          ? "Sending password reset email, please wait"
+                          : "Send password reset email"
+                      }
                     >
                       {actionLoading === "reset" ? (
-                        <><Loader2 className="h-3.5 w-3.5 animate-spin" />Sending…</>
+                        <><Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />Sending…</>
                       ) : (
                         "Reset password"
                       )}
                     </Button>
-                    <Button type="button" size="sm" variant="outline" onClick={() => navigate("/login")} disabled={actionLoading !== null}>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => navigate("/login")}
+                      disabled={actionLoading !== null}
+                      aria-label="Go to login page"
+                    >
                       Go to login
                     </Button>
                   </div>
 
-                  {actionStatus && (
-                    <div
-                      role="status"
-                      aria-live="polite"
-                      className={`flex items-start gap-2 rounded-md border p-2.5 text-sm ${
-                        actionStatus.status === "success"
-                          ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-                          : "border-destructive/40 bg-destructive/10 text-destructive"
-                      }`}
-                    >
-                      {actionStatus.status === "success" ? (
-                        <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" />
-                      ) : (
-                        <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-                      )}
-                      <span>{actionStatus.message}</span>
-                    </div>
-                  )}
+                  <div
+                    ref={statusRef}
+                    tabIndex={-1}
+                    role={actionStatus?.status === "error" ? "alert" : "status"}
+                    aria-live={actionStatus?.status === "error" ? "assertive" : "polite"}
+                    aria-atomic="true"
+                    className="outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md"
+                  >
+                    {actionStatus && (
+                      <div
+                        className={`flex items-start gap-2 rounded-md border p-2.5 text-sm ${
+                          actionStatus.status === "success"
+                            ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                            : "border-destructive/40 bg-destructive/10 text-destructive"
+                        }`}
+                      >
+                        {actionStatus.status === "success" ? (
+                          <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
+                        ) : (
+                          <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
+                        )}
+                        <span>
+                          <span className="sr-only">
+                            {actionStatus.status === "success" ? "Success: " : "Error: "}
+                          </span>
+                          {actionStatus.message}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </AlertDescription>
               </Alert>
             )}
