@@ -66,12 +66,26 @@ const Register = () => {
     }
   };
 
+  const startCooldown = (seconds: number) => {
+    setResendCooldown(seconds);
+    const interval = setInterval(() => {
+      setResendCooldown((s) => {
+        if (s <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+  };
+
   const handleResendConfirmation = async () => {
     if (!form.email) {
-      toast({ title: "Enter your email first", variant: "destructive" });
+      setActionStatus({ kind: "resend", status: "error", message: "Enter your email above first." });
       return;
     }
     setActionLoading("resend");
+    setActionStatus(null);
     const { error } = await supabase.auth.resend({
       type: "signup",
       email: form.email,
@@ -79,26 +93,42 @@ const Register = () => {
     });
     setActionLoading(null);
     if (error) {
-      toast({ title: "Could not resend", description: error.message, variant: "destructive" });
+      const msg = error.message || "Something went wrong. Please try again.";
+      setActionStatus({ kind: "resend", status: "error", message: msg });
+      toast({ title: "Could not resend", description: msg, variant: "destructive" });
     } else {
-      toast({ title: "Confirmation email sent", description: "Check your inbox to verify your account." });
+      setActionStatus({
+        kind: "resend",
+        status: "success",
+        message: `Confirmation email sent to ${form.email}. Check your inbox (and spam folder).`,
+      });
+      startCooldown(30);
+      toast({ title: "Confirmation email sent" });
     }
   };
 
   const handleSendReset = async () => {
     if (!form.email) {
-      toast({ title: "Enter your email first", variant: "destructive" });
+      setActionStatus({ kind: "reset", status: "error", message: "Enter your email above first." });
       return;
     }
     setActionLoading("reset");
+    setActionStatus(null);
     const { error } = await supabase.auth.resetPasswordForEmail(form.email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     setActionLoading(null);
     if (error) {
-      toast({ title: "Could not send reset email", description: error.message, variant: "destructive" });
+      const msg = error.message || "Something went wrong. Please try again.";
+      setActionStatus({ kind: "reset", status: "error", message: msg });
+      toast({ title: "Could not send reset email", description: msg, variant: "destructive" });
     } else {
-      toast({ title: "Password reset email sent", description: "Follow the link to set a new password." });
+      setActionStatus({
+        kind: "reset",
+        status: "success",
+        message: `Password reset link sent to ${form.email}. Open it to set a new password.`,
+      });
+      toast({ title: "Password reset email sent" });
     }
   };
 
