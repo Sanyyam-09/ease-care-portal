@@ -1,19 +1,23 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 
 const Register = () => {
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", confirmPassword: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [existingAccount, setExistingAccount] = useState(false);
+  const [actionLoading, setActionLoading] = useState<"resend" | "reset" | null>(null);
   const { toast } = useToast();
   const { signUp } = useAuth();
   const navigate = useNavigate();
@@ -35,13 +39,61 @@ const Register = () => {
       return;
     }
     setLoading(true);
+    setExistingAccount(false);
     const { error } = await signUp(form.email, form.password, form.name, form.phone);
     setLoading(false);
     if (error) {
-      toast({ title: "Registration failed", description: error.message, variant: "destructive" });
+      const code = (error as any)?.code || "";
+      const msg = (error?.message || "").toLowerCase();
+      if (code === "user_repeated_signup" || msg.includes("already registered") || msg.includes("user already")) {
+        setExistingAccount(true);
+        toast({
+          title: "Email already registered",
+          description: "Choose an option below to continue.",
+          variant: "destructive",
+        });
+      } else {
+        toast({ title: "Registration failed", description: error.message, variant: "destructive" });
+      }
     } else {
       toast({ title: "Account created!", description: "Please check your email to verify your account." });
       navigate("/login");
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!form.email) {
+      toast({ title: "Enter your email first", variant: "destructive" });
+      return;
+    }
+    setActionLoading("resend");
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: form.email,
+      options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+    });
+    setActionLoading(null);
+    if (error) {
+      toast({ title: "Could not resend", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Confirmation email sent", description: "Check your inbox to verify your account." });
+    }
+  };
+
+  const handleSendReset = async () => {
+    if (!form.email) {
+      toast({ title: "Enter your email first", variant: "destructive" });
+      return;
+    }
+    setActionLoading("reset");
+    const { error } = await supabase.auth.resetPasswordForEmail(form.email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setActionLoading(null);
+    if (error) {
+      toast({ title: "Could not send reset email", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Password reset email sent", description: "Follow the link to set a new password." });
     }
   };
 
@@ -88,6 +140,29 @@ const Register = () => {
               <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
               <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or register with email</span></div>
             </div>
+
+            {existingAccount && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>This email is already registered</AlertTitle>
+                <AlertDescription className="space-y-3">
+                  <p className="text-sm">
+                    An account with <span className="font-medium">{form.email}</span> already exists. If you haven't confirmed your email yet, resend the link. If you forgot your password, reset it.
+                  </p>
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <Button type="button" size="sm" variant="secondary" onClick={handleResendConfirmation} disabled={actionLoading !== null}>
+                      {actionLoading === "resend" ? "Sending…" : "Resend confirmation"}
+                    </Button>
+                    <Button type="button" size="sm" variant="secondary" onClick={handleSendReset} disabled={actionLoading !== null}>
+                      {actionLoading === "reset" ? "Sending…" : "Reset password"}
+                    </Button>
+                    <Button type="button" size="sm" variant="outline" onClick={() => navigate("/login")} disabled={actionLoading !== null}>
+                      Go to login
+                    </Button>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
