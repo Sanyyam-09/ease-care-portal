@@ -185,16 +185,59 @@ const Register = () => {
                     An account with <span className="font-medium">{form.email}</span> already exists. If you haven't confirmed your email yet, resend the link. If you forgot your password, reset it.
                   </p>
                   <div className="flex flex-wrap gap-2 pt-1">
-                    <Button type="button" size="sm" variant="secondary" onClick={handleResendConfirmation} disabled={actionLoading !== null}>
-                      {actionLoading === "resend" ? "Sending…" : "Resend confirmation"}
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      onClick={handleResendConfirmation}
+                      disabled={actionLoading !== null || resendCooldown > 0}
+                      aria-busy={actionLoading === "resend"}
+                    >
+                      {actionLoading === "resend" ? (
+                        <><Loader2 className="h-3.5 w-3.5 animate-spin" />Sending…</>
+                      ) : resendCooldown > 0 ? (
+                        `Resend in ${resendCooldown}s`
+                      ) : (
+                        "Resend confirmation"
+                      )}
                     </Button>
-                    <Button type="button" size="sm" variant="secondary" onClick={handleSendReset} disabled={actionLoading !== null}>
-                      {actionLoading === "reset" ? "Sending…" : "Reset password"}
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      onClick={handleSendReset}
+                      disabled={actionLoading !== null}
+                      aria-busy={actionLoading === "reset"}
+                    >
+                      {actionLoading === "reset" ? (
+                        <><Loader2 className="h-3.5 w-3.5 animate-spin" />Sending…</>
+                      ) : (
+                        "Reset password"
+                      )}
                     </Button>
                     <Button type="button" size="sm" variant="outline" onClick={() => navigate("/login")} disabled={actionLoading !== null}>
                       Go to login
                     </Button>
                   </div>
+
+                  {actionStatus && (
+                    <div
+                      role="status"
+                      aria-live="polite"
+                      className={`flex items-start gap-2 rounded-md border p-2.5 text-sm ${
+                        actionStatus.status === "success"
+                          ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                          : "border-destructive/40 bg-destructive/10 text-destructive"
+                      }`}
+                    >
+                      {actionStatus.status === "success" ? (
+                        <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" />
+                      ) : (
+                        <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                      )}
+                      <span>{actionStatus.message}</span>
+                    </div>
+                  )}
                 </AlertDescription>
               </Alert>
             )}
