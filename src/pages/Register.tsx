@@ -26,6 +26,15 @@ const Register = () => {
   const { toast } = useToast();
   const { signUp } = useAuth();
   const navigate = useNavigate();
+  const statusRef = useRef<HTMLDivElement>(null);
+  const alertTitleId = "existing-account-title";
+  const alertDescId = "existing-account-desc";
+
+  useEffect(() => {
+    if (actionStatus && statusRef.current) {
+      statusRef.current.focus();
+    }
+  }, [actionStatus]);
 
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
 
