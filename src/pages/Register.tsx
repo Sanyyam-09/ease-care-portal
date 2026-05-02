@@ -141,6 +141,29 @@ const Register = () => {
               <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or register with email</span></div>
             </div>
 
+            {existingAccount && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>This email is already registered</AlertTitle>
+                <AlertDescription className="space-y-3">
+                  <p className="text-sm">
+                    An account with <span className="font-medium">{form.email}</span> already exists. If you haven't confirmed your email yet, resend the link. If you forgot your password, reset it.
+                  </p>
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <Button type="button" size="sm" variant="secondary" onClick={handleResendConfirmation} disabled={actionLoading !== null}>
+                      {actionLoading === "resend" ? "Sending…" : "Resend confirmation"}
+                    </Button>
+                    <Button type="button" size="sm" variant="secondary" onClick={handleSendReset} disabled={actionLoading !== null}>
+                      {actionLoading === "reset" ? "Sending…" : "Reset password"}
+                    </Button>
+                    <Button type="button" size="sm" variant="outline" onClick={() => navigate("/login")} disabled={actionLoading !== null}>
+                      Go to login
+                    </Button>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
