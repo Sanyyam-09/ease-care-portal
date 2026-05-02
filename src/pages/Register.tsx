@@ -39,13 +39,61 @@ const Register = () => {
       return;
     }
     setLoading(true);
+    setExistingAccount(false);
     const { error } = await signUp(form.email, form.password, form.name, form.phone);
     setLoading(false);
     if (error) {
-      toast({ title: "Registration failed", description: error.message, variant: "destructive" });
+      const code = (error as any)?.code || "";
+      const msg = (error?.message || "").toLowerCase();
+      if (code === "user_repeated_signup" || msg.includes("already registered") || msg.includes("user already")) {
+        setExistingAccount(true);
+        toast({
+          title: "Email already registered",
+          description: "Choose an option below to continue.",
+          variant: "destructive",
+        });
+      } else {
+        toast({ title: "Registration failed", description: error.message, variant: "destructive" });
+      }
     } else {
       toast({ title: "Account created!", description: "Please check your email to verify your account." });
       navigate("/login");
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!form.email) {
+      toast({ title: "Enter your email first", variant: "destructive" });
+      return;
+    }
+    setActionLoading("resend");
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: form.email,
+      options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+    });
+    setActionLoading(null);
+    if (error) {
+      toast({ title: "Could not resend", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Confirmation email sent", description: "Check your inbox to verify your account." });
+    }
+  };
+
+  const handleSendReset = async () => {
+    if (!form.email) {
+      toast({ title: "Enter your email first", variant: "destructive" });
+      return;
+    }
+    setActionLoading("reset");
+    const { error } = await supabase.auth.resetPasswordForEmail(form.email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setActionLoading(null);
+    if (error) {
+      toast({ title: "Could not send reset email", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Password reset email sent", description: "Follow the link to set a new password." });
     }
   };
 
