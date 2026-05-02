@@ -18,6 +18,11 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [existingAccount, setExistingAccount] = useState(false);
   const [actionLoading, setActionLoading] = useState<"resend" | "reset" | null>(null);
+  const [actionStatus, setActionStatus] = useState<
+    | { kind: "resend" | "reset"; status: "success" | "error"; message: string }
+    | null
+  >(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const { toast } = useToast();
   const { signUp } = useAuth();
   const navigate = useNavigate();
