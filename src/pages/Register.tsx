@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +18,11 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [existingAccount, setExistingAccount] = useState(false);
   const [actionLoading, setActionLoading] = useState<"resend" | "reset" | null>(null);
+  const [actionStatus, setActionStatus] = useState<
+    | { kind: "resend" | "reset"; status: "success" | "error"; message: string }
+    | null
+  >(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const { toast } = useToast();
   const { signUp } = useAuth();
   const navigate = useNavigate();
@@ -61,12 +66,26 @@ const Register = () => {
     }
   };
 
+  const startCooldown = (seconds: number) => {
+    setResendCooldown(seconds);
+    const interval = setInterval(() => {
+      setResendCooldown((s) => {
+        if (s <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+  };
+
   const handleResendConfirmation = async () => {
     if (!form.email) {
-      toast({ title: "Enter your email first", variant: "destructive" });
+      setActionStatus({ kind: "resend", status: "error", message: "Enter your email above first." });
       return;
     }
     setActionLoading("resend");
+    setActionStatus(null);
     const { error } = await supabase.auth.resend({
       type: "signup",
       email: form.email,
@@ -74,26 +93,42 @@ const Register = () => {
     });
     setActionLoading(null);
     if (error) {
-      toast({ title: "Could not resend", description: error.message, variant: "destructive" });
+      const msg = error.message || "Something went wrong. Please try again.";
+      setActionStatus({ kind: "resend", status: "error", message: msg });
+      toast({ title: "Could not resend", description: msg, variant: "destructive" });
     } else {
-      toast({ title: "Confirmation email sent", description: "Check your inbox to verify your account." });
+      setActionStatus({
+        kind: "resend",
+        status: "success",
+        message: `Confirmation email sent to ${form.email}. Check your inbox (and spam folder).`,
+      });
+      startCooldown(30);
+      toast({ title: "Confirmation email sent" });
     }
   };
 
   const handleSendReset = async () => {
     if (!form.email) {
-      toast({ title: "Enter your email first", variant: "destructive" });
+      setActionStatus({ kind: "reset", status: "error", message: "Enter your email above first." });
       return;
     }
     setActionLoading("reset");
+    setActionStatus(null);
     const { error } = await supabase.auth.resetPasswordForEmail(form.email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     setActionLoading(null);
     if (error) {
-      toast({ title: "Could not send reset email", description: error.message, variant: "destructive" });
+      const msg = error.message || "Something went wrong. Please try again.";
+      setActionStatus({ kind: "reset", status: "error", message: msg });
+      toast({ title: "Could not send reset email", description: msg, variant: "destructive" });
     } else {
-      toast({ title: "Password reset email sent", description: "Follow the link to set a new password." });
+      setActionStatus({
+        kind: "reset",
+        status: "success",
+        message: `Password reset link sent to ${form.email}. Open it to set a new password.`,
+      });
+      toast({ title: "Password reset email sent" });
     }
   };
 
@@ -150,16 +185,59 @@ const Register = () => {
                     An account with <span className="font-medium">{form.email}</span> already exists. If you haven't confirmed your email yet, resend the link. If you forgot your password, reset it.
                   </p>
                   <div className="flex flex-wrap gap-2 pt-1">
-                    <Button type="button" size="sm" variant="secondary" onClick={handleResendConfirmation} disabled={actionLoading !== null}>
-                      {actionLoading === "resend" ? "Sending…" : "Resend confirmation"}
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      onClick={handleResendConfirmation}
+                      disabled={actionLoading !== null || resendCooldown > 0}
+                      aria-busy={actionLoading === "resend"}
+                    >
+                      {actionLoading === "resend" ? (
+                        <><Loader2 className="h-3.5 w-3.5 animate-spin" />Sending…</>
+                      ) : resendCooldown > 0 ? (
+                        `Resend in ${resendCooldown}s`
+                      ) : (
+                        "Resend confirmation"
+                      )}
                     </Button>
-                    <Button type="button" size="sm" variant="secondary" onClick={handleSendReset} disabled={actionLoading !== null}>
-                      {actionLoading === "reset" ? "Sending…" : "Reset password"}
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      onClick={handleSendReset}
+                      disabled={actionLoading !== null}
+                      aria-busy={actionLoading === "reset"}
+                    >
+                      {actionLoading === "reset" ? (
+                        <><Loader2 className="h-3.5 w-3.5 animate-spin" />Sending…</>
+                      ) : (
+                        "Reset password"
+                      )}
                     </Button>
                     <Button type="button" size="sm" variant="outline" onClick={() => navigate("/login")} disabled={actionLoading !== null}>
                       Go to login
                     </Button>
                   </div>
+
+                  {actionStatus && (
+                    <div
+                      role="status"
+                      aria-live="polite"
+                      className={`flex items-start gap-2 rounded-md border p-2.5 text-sm ${
+                        actionStatus.status === "success"
+                          ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                          : "border-destructive/40 bg-destructive/10 text-destructive"
+                      }`}
+                    >
+                      {actionStatus.status === "success" ? (
+                        <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" />
+                      ) : (
+                        <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                      )}
+                      <span>{actionStatus.message}</span>
+                    </div>
+                  )}
                 </AlertDescription>
               </Alert>
             )}
